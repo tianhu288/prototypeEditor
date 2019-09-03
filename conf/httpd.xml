@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ZHIQIM-CONFIG PUBLIC "-//ZHIQIM //DTD Zhiqim-Config Configuration 1.5.0//EN" "http://zhiqim.org/xmldtds/zhiqim_config_1_5_0.dtd">
+<zhiqim-config>
+
+    <group id="resource" desc="WEB容器服务配置">
+        <item key="context" value="resource.root" type="protected" desc="HTTP服务下包括的上下文环境，多个用逗号隔开" />
+	    <item key="scheme" value="HTTP" type="protected" desc="HTTP或HTTPS协议" />
+        <item key="port" value="8080" type="protected" desc="监听端口" />
+        <item key="minPoolSize" value="5" type="protected" desc="HTTP处理线程池最小值" />
+        <item key="maxPoolSize" value="10" type="protected" desc="HTTP处理线程池最大值" />
+    </group>
+    
+    <group id="resource.root" desc="Web界面">
+        <item key="path" value="/" type="protected" desc="上下文环境路径，必填" />
+        <item key="resourceType" value="directory" type="protected" desc="资源目录类型classpath|directory，无资源时可不配置" />
+        <item key="resourcePath" value="./resource" type="protected" desc="资源目录，无资源时可不配置" />
+        <item key="welcomeUrl" value="/index.htm" type="protected" desc="欢迎页，无资源时可不配置，/开头" />
+        <item key="sessionTimeout" value="36000" type="protected" desc="sessionTimeout会话时长" />
+        <item key="sessionIdName" value="smsessionid" type="protected" desc="cookie或redirect-url时的取sessionid的名称，未配置缺省jsessionid" />
+        
+        <item key="upload.rootDir" value="./upload" type="protected" desc="上传组件根目录" />
+        <item key="upload.large.rootDir" value="./upload" type="protected" desc="上传组件根目录" />
+        
+    </group>
+
+</zhiqim-config>

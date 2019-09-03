@@ -1,0 +1,206 @@
+<#---------------------------------------------------->
+<#--  以下为变量定义           ------------------------>
+<#---------------------------------------------------->
+
+<!--属性定义-->
+<#var name="原型设计"/>
+<#var version="V1.0.0"/>
+<#var prototype_editor_name="智能设计平台"/>
+<#var zhiqim.css = context.getRootPath("/service/res/zhiqim_v1.5.1.r20190528.css")/>
+<#var zhiqim.js = new ZmrCdnRuntime(context, "/service/res/zhiqim_v1.5.1.r20190528.min.js")/>
+<#var zhiqim.mobile.css= context.getRootPath("/service/res/zhiqim.mobile_v1.5.1.r20190528.css")/>
+<#var zhiqim.mobile.js= new ZmrCdnRuntime(context, "/service/res/zhiqim.mobile_v1.5.1.r20190528.min.js")/>
+
+<!-- 设计页面js引入-->
+<#var zhiqim_uploadlarge.js = new ZmrCdnRuntime(context, "/service/res/zhiqim_upload_large_v1.5.0.r2018111001.js")/>
+<#var prototype_editor_js_version="v1.0.0_r2019052801"/>
+
+
+<#---------------------------------------------------->
+<#--  以下为函数定义           ------------------------>
+<#---------------------------------------------------->
+<!--js-->
+<#function zhqim_manager_list_control_js()>
+<style>
+    /* 输入框 */
+    .editItemLabel {
+        width: 400px;
+        padding-left: 80px;
+        margin: auto;
+        position: relative;
+    }
+    .editItemLabel:not(:first-child) {
+        margin-top: 15px;
+    }
+    .editItemLabel>div {
+        position: absolute;
+        width: 80px;
+        padding-right: 10px;
+        text-align: right;
+        left: 0;
+        top: 0;
+        line-height: 30px;
+    }
+    .editItemLabel>span {
+        display: block;
+        font-size: 12px;
+        color: #999999;
+        line-height: 16px;
+    }
+    .editItemLabel>textarea {
+        height: 88px;
+    }
+    .editItemInput {
+        display: block;
+        width: 100%;
+        margin-top: 3px;
+        border: 1px solid #CCCCCC;
+        color: #666666;
+    }
+    .editItemInput:focus {
+        border-color: #3399ff;
+    }
+    /* 排序按钮 */
+    .clsPidCtrBtn {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    .clsPidCtrBtn > svg {
+        width: 20px;
+        height: 20px;
+    }
+    /*图标展示*/
+    .clsSvgIcon>svg {
+        width: 40px;
+        height: 40px;
+    }
+</style>
+<script>
+    class ListControl {
+        static checkBoxName = "";
+        static deleteHtm = "";
+        // 删除列表元素
+        static deleteItems($this) {
+            let list = [];
+            if ($this) {
+                let $item = Z($this).parent().parent();
+                let id = $item.find("input[type=checkbox]").val();
+                id = parseFloat(id);
+                list.push(id);
+            } else {
+                let checkBoxVal = Z.FM.getCheckBoxValue(ListControl.checkBoxName);
+                if (!checkBoxVal)
+                    return;
+                list = checkBoxVal.split(",");
+                list.forEach((item,index)=> list[index] = parseFloat(item));
+            }
+            // 确定删除
+            Z.confirm("确定删除所选分类？", ()=> {
+                Z.d.location.href = ListControl.deleteHtm + "?idList=" + list;
+            });
+        }
+    }
+</script>
+</#function>
+
+<!--css-->
+<#function zhqim_prototype_design_css_defined()>
+<link rel="stylesheet" type="text/css" href="../zres/zhiqimPrototypeEditor/css/prototypeEdit.css">
+</#function>
+
+<!--js-->
+<#function zhqim_prototype_design_js_defined()>
+<script type="text/javascript" src="../zres/zhiqimPrototypeEditor/js/const.js"></script>
+<script type="text/javascript" src="../zres/zhiqimPrototypeEditor/js/prototype.js"></script>
+<script type="text/javascript" src="../zres/zhiqimPrototypeEditor/js/canvasEvent.js"></script>
+<script type="text/javascript" src="../zres/zhiqimPrototypeEditor/js/panelEvent.js"></script>
+<script type="text/javascript" src="../zres/zhiqimPrototypeEditor/js/prototypeUpdate.js"></script>
+<script type="text/javascript" src="../zres/zhiqimPrototypeEditor/js/shortCutKey.js"></script>
+</#function>
+
+<!--分类列表页样式-->
+<#function classification_list_input_cssJs(type)>
+<script>
+    const isEleCls = <#if type == "ele">true<#else>false</#if>;
+    const clsList = ${Jsons.toString(eleClsList)};
+    let actionPre = <#if type == "ele">"elementClassification"<#else>"libClassification"</#if>;
+    // 显示弹窗
+    function editClsDialog(title, id, name, code, status, keys, icon, parent) {
+        actionPre += id ? "Update.htm" : "Add.htm";
+        let newDialog = new Z.Dialog();
+        newDialog.title = title;
+        newDialog.text = '<form method="post" action="' + actionPre + '"><div class="z-absolute z-l0 z-t0 z-r0 z-pd20" style="bottom:60px;">' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>名称：</div>' +
+            '       <input name="clsName" class="z-input editItemInput" type="text" value="'+(name||'')+'" placeholder="分类名">' +
+            '   </label>' +
+            '   <label class="z-hide editItemLabel z-event-none">' +
+            '       <input name="id" class="z-input editItemInput" type="text" value="'+(id||'')+'">' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>代码：</div>' +
+            '       <input name="clsCode" class="z-input editItemInput" type="text" value="'+(code||'')+'" placeholder="分类代码" ' +
+            '           oninput=\'this.value=this.value.replace(/\\W/g,"")\'>' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>状态：</div>' +
+            '       <select name="clsStatus" class="z-select editItemInput"> ' +
+            '           <option value="1"'+ (status===1?' selected':'') +'>正常</option>' +
+            '           <option value="2"'+ (status===2?' selected':'') +'>停用</option>' +
+            '       </select>' +
+            '   </label>';
+        if (isEleCls) {
+            newDialog.text +=
+                '<label class="z-show-b editItemLabel">' +
+                '   <div>所属父级：</div>' +
+                '   <select name="parent" class="z-select editItemInput">' +
+                '       <option value="0">选择所属分类</option>';
+            for (let item of clsList) {
+                if (item.id !== id && !item.parent) {
+                    newDialog.text +=
+                        '<option value="' + item.id + '"' + (parent === item.clsCode ? ' selected' : '') + '>' + item.clsName + '</option>';
+                }
+            }
+            newDialog.text +=
+                '   </select>' +
+                '</label>';
+            newDialog.text +=
+                '<label class="z-show-b editItemLabel">' +
+                '   <div>图标：</div>' +
+                '   <textarea name="clsIcon" class="z-textarea editItemInput" placeholder="图标svg">' + (icon || '') + '</textarea>' +
+                '   <span>图标内容仅限svg源码</span>' +
+                '</label>';
+        }
+        newDialog.text +=
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>关键词：</div>' +
+            '       <textarea name="clsKeys" class="z-textarea editItemInput" placeholder="关键词">'+(keys||'')+'</textarea>' +
+            '       <span>多个关键词，以英文逗号分隔</span>' +
+            '   </label>' +
+            '</div>' +
+            '<div class="z-absolute z-l0 z-r0 z-b0 z-h60 z-pd-b20 z-text-center">' +
+            '   <button type="button" class="z-button z-large zi-w80" onclick="editClsClose();">取消</button>' +
+            '   <div class="z-show-ib z-w20"></div>' +
+            '   <button type="submit" class="z-button z-blue z-large zi-w80">确定</button>' +
+            '</div></form>';
+        if (isEleCls) {
+            newDialog.width = 550;
+            newDialog.height = 520;
+        } else {
+            newDialog.width = 500;
+            newDialog.height = 350;
+        }
+        newDialog.execute();
+    }
+    // 新增分类
+    function newClsDialog() {
+        editClsDialog("新增分类");
+    }
+    // 关闭弹窗
+    function editClsClose() {
+        Z.Dialog.close();
+    }
+</script>
+</#function>

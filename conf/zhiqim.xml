@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ZHIQIM-CONFIG PUBLIC "-//ZHIQIM //DTD Zhiqim-Config Configuration 1.5.0//EN" "http://zhiqim.org/xmldtds/zhiqim_config_1_5_0.dtd">
+<zhiqim-config>
+
+    <group id="boot" desc="系统启动配置">
+        <item key="name" value="原型设计" type="protected" desc="系统名称" />
+        <item key="version" value="1.0.0" type="protected" desc="系统版本" />
+        <item key="port" value="61048" type="protected" desc="系统监听端口，用于启动监听和命令关闭工程" />
+        <item key="home" value="C:\java\jdk1.7.0_80" type="protected" desc="JDK根目录" />
+        <item key="process" value="Zhiqim_MediaEditor" type="protected" desc="使用的进程名" />
+        <item key="args" value="-server -Xms64m -Xmx4096m" type="protected" desc="JVM参数" />
+        <item key="libex" value="./libext" type="protected" desc="加载的库目录" />
+        <item key="include" value="*/lib/*,*bin" type="protected" desc="扫描包含库模式，多个用逗号隔开，星号表示通配符" />
+    </group>
+    
+    <group id="config" desc="系统其他配置文件，./开头表示工程相对路径下，绝对路径使用/或d:\\等">
+        <item key="httpd" value="./conf/httpd.xml" type="protected" desc="web配置"/>
+        <item key="logging" value="./conf/logging.xml" type="protected" desc="日记配置"/>
+    </group>
+
+    <group id="service" desc="系统服务配置，有依赖时注意顺序，系统按顺序加载，按倒序销毁">
+        <item key="logging" value="org.zhiqim.kernel.logging.LogServer" type="protected" desc="日志服务" />
+        <item key="cutter" value="org.zhiqim.kernel.logging.LogLinuxNohupCutter" type="protected" desc="日志Linux切割服务" />
+        <item key="orm" value="org.zhiqim.orm.ORMServer" type="protected" desc="主数据库服务" />
+        <item key="resource" value="org.zhiqim.httpd.HttpServer" type="protected" desc="web服务" />
+    </group>
+    
+    <group id="orm" desc="Prototype数据库">
+        <item key="dbType" value="mysql" type="protected" desc="数据库类型,支持oracle|mysql|mssql|hsql|access" />
+        <item key="driver" value="org.zhiqim.mysql5_0_8.jdbc.Driver" type="protected" desc="数据库驱动" />
+        <item key="url" value="jdbc:mysql://127.0.0.1:3306/zhiqim_prototype_editor?useUnicode=true&amp;characterEncoding=UTF-8" type="protected" desc="数据库Url" />
+        <item key="user" value="root" type="protected" desc="数据库用户名" />
+        <item key="pass" value="root" type="protected" desc="数据库密码" />
+        <item key="minPoolSize" value="2" type="protected" desc="线程池最小值" />
+        <item key="maxPoolSize" value="4" type="protected" desc="线程池最大值" />
+        <item key="maxKeepTime" value="7000" type="protected" desc="每连接最大保持时长，大于该值将重建连接，单位秒" />
+    </group>
+        
+    <group id="prototype" desc="原型配置">
+        <item key="prototypeRoot" value="原型素材" type="protected" desc="原型素材根目录"/>
+        <item key="prototypeUrlPre" value="http://127.0.0.1:8088" type="protected" desc="网络访问前缀"/>
+        <item key="prototypePathPre" value="./upload" type="protected" desc="本地访问前缀"/>
+    </group>
+    
+</zhiqim-config>

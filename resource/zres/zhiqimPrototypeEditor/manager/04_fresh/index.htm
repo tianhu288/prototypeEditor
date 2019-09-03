@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>${context.getContextName()}</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+${Styles.src(zhiqim.css)}
+${Scripts.src(zhiqim.js)}
+${Scripts.src(jsencrypt.js)}
+${Styles.htmlOverflowHidden()}
+<style>
+body{color:#333;background-color:#fff;background-image: url(ztmpl/zhiqim_manager/index_bg_01.jpg);background-repeat: no-repeat;background-size:100%;}
+body,table,td,div{font-size:14px;line-height:120%;}
+a,a:visited{color:#333;text-decoration:none;cursor:pointer;}
+a:active,a:hover{color:#1e7eec;text-decoration:none;}
+
+.header{position:fixed;width:100%;}
+.header .toplogobg{width:316px;height:58px;background-image: url(ztmpl/zhiqim_manager/04_fresh/index_toplogobg.png);background-repeat: no-repeat;}
+.header .toplogobg span{line-height:55px;color:#fff;font-size:25px;}
+.footer{position:fixed;bottom:0px; width:100%;height:40px;background:rgba(255,255,255,0.2);line-height:40px;text-align:center;color:#fff;}
+
+.login{background-color: #ffffff;width:700px;}
+.input{color:#666;font-size:20px;border:2px solid #cecfcf;border-radius:5px;height:50px;line-height:50px;text-indent:10px;font-family:Consolas,"微软雅黑";}
+.input:focus{border-color:#009899;}
+.input.verificationCode{letter-spacing:4px;}
+</style>
+<script>
+Z.onload(function()
+{//默认焦点
+    if (Z("#operatorCode").val() == "")
+        Z("#operatorCode").focus();
+    else if (Z("#operatorPass").val() == "")
+        Z("#operatorPass").focus();
+    else if (Z("#verificationCode").val() == null)
+        Z("#verificationCode").focus();
+    else
+        Z("#operatorCode").focus();
+        
+    Z(document).keydown(function(e)
+    {
+        if (Z.E.key(e) != Z.E.KEY.ENTER)
+            return;
+            
+        if (!Z.Dialog.cache.isEmpty())
+            return;
+            
+        doLogin();
+    });
+});
+
+function doRememberCode(rememberCode)
+{//取消记住账号时，同时取消记住密码
+    if (!rememberCode.checked)
+    {
+        Z("#rememberPass")[0].checked = false;
+        Z("[data-id=rememberPass]").removeClass("z-active");
+    }
+}
+
+function doRememberPass(rememberPass)
+{//记住密码时，同时记住账号
+    if (rememberPass.checked)
+    {
+        Z("#rememberCode")[0].checked = true;
+        Z("[data-id=rememberCode]").addClass("z-active");
+    }
+}
+
+function doLogin()
+{//登陆
+    var operatorCode = Z("#operatorCode").val();
+    if (Z.V.isEmptyBlank(operatorCode))
+    {//用户名和密码必填
+        Z.failure("用户名不能为空！",function(){
+            Z("#operatorCode").focus();
+        });
+        return;
+    } 
+    
+    var operatorPass = Z("#operatorPass").val();
+    if (Z.V.isEmptyBlank(operatorPass))
+    {//用户名和密码必填
+        Z.failure("密码不能为空！",function(){
+            Z("#operatorPass").focus();
+        });
+        return;
+    }
+    
+    var verificationCode = Z("#verificationCode").val();
+    if (Z("#verificationCode").length > 0 && verificationCode.length != 4)
+    {//如果有验证码框的时候，要求值必须是4位（数字在输入时控制）
+        Z.failure("验证码为4位数字！");
+        return;
+    }
+    
+    //对密码进行RSA加密
+    var publicKey = "${ZmrParamDao.getPublicKey(context)}";
+    var encrypt = new JSEncrypt();
+    encrypt.setPublicKey(publicKey);
+    operatorPass = encrypt.encrypt(operatorPass);
+    
+    var ajax = new Z.Ajax();
+    ajax.setContextPath("${context.getContextPath()}");
+    ajax.setClassName("ZmrLoginPresenter");
+    ajax.setMethodName("doLogin");
+    ajax.addParam("operatorCode", operatorCode);
+    ajax.addParam("operatorPass", operatorPass);
+    ajax.addParam("verificationCode", verificationCode);
+    
+    <#if hasRememberCode>
+    ajax.addParam("rememberCode", Z("#rememberCode")[0].checked);
+    </#if>
+    <#if hasRememberPass>
+    ajax.addParam("rememberPass", Z("#rememberPass")[0].checked);
+    </#if>
+    
+    ajax.setFailureAlertRecovery();
+    ajax.setSuccessLocationResponse();
+    ajax.setLoading("login", "正在登录...", {disabled:true,recovery:false});
+    ajax.execute();
+}
+</script>
+</head>
+
+<body>
+<div class="header">
+    <div class="z-float-center z-w1200">
+        <div class="z-float-left"><img src="ztmpl/zhiqim_manager/04_fresh/index_topbgleft.png" style="width:442px;"></div>
+        <div class="z-float-left toplogobg z-text-center"><span>${context.getContextName()}</span></div>
+        <div class="z-float-right"><img src="ztmpl/zhiqim_manager/04_fresh/index_topbgright.png" style="width:442px;"></div>
+    </div>
+</div>  
+<div class="z-absolute-center-middle login" style="height:<#if hasVerificationCode && hasRememberCode>410<#elseif hasVerificationCode>360<#elseif hasRememberCode>350<#else>300</#if>px"> 
+<table class="z-table z-h100p">
+<tr>
+    <td width="187" valign="bottom" class="z-text-center" style="background-color:#01adae;"><img src="ztmpl/zhiqim_manager/index_slogan_02.png"></td>
+    <td width="513" valign="top">
+        <input type="text" class="z-hidden-fixed"/>
+        <input type="password" class="z-hidden-fixed"/>
+        <div class="z-mg-l40">
+        <table class="z-table z-h70-tr z-pd5 z-color-white">
+        <tr>
+            <td class="z-px20 z-color-666 z-mg-t10">用户登录</td>
+        </tr>
+        <tr>
+            <td><input id="operatorCode" class="z-w400 input" placeholder="用户名" value="#{operatorCode}" maxlength="16" spellcheck="false" autocomplete="off"></td>
+        </tr>
+        <tr>
+            <td><input id="operatorPass" type="password" class="z-w400 input" placeholder="密码" value="#{operatorPass}" maxlength="16" spellcheck="false" autocomplete="off"></td>
+        </tr>
+        <#if hasVerificationCode>
+        <tr>
+            <td>
+                <input id="verificationCode" type="text" class="z-w300 input verificationCode" placeholder="验证码" value="" maxlength="4" data-options="type:Numeric;paste:true;" spellcheck="false" autocomplete="off">
+                <img class="z-pointer z-bd-rd5 z-mg-t-8" title="点击刷新验证码" onclick="this.src='service/vcode.jpg?bgColor=%231299ec&width=95&height=48&fontSize=20&yawp=true&t='+new Date().getTime();" src="service/vcode.jpg?bgColor=%231299ec&width=95&height=48&fontSize=20&yawp=true&t=${DateTimes.getDateTime17String()}">
+            </td>   
+        </tr>
+        </#if>
+        <#if hasRememberCode>
+        <tr class="zi-h40">
+            <td class="z-px16 z-color-gray">
+                <input id="rememberCode" type="checkbox" data-role="z-checkbox" data-class="z-mg-r10 ${zmr_color_class}" onclick="doRememberCode(this);" <#if Validates.isNotEmpty(operatorCode)>checked</#if>>记住用户名
+                <#if hasRememberPass>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input id="rememberPass" type="checkbox" data-role="z-checkbox" data-class="z-mg-r10 ${zmr_color_class}" onclick="doRememberPass(this);" <#if Validates.isNotEmpty(operatorPass)>checked</#if>/>记住密码
+                </#if>
+            </td>
+        </tr>
+        </#if>
+        <tr>
+            <td>
+                <button id="login" class="z-button z-w400 z-h50 zi-px20 ${zmr_color_class}" onclick="doLogin()">登&nbsp;&nbsp;录</button>
+            </td>   
+        </tr>
+        </table>
+        </div>
+    </td>
+</tr>
+</table>
+</div>
+<div class="footer">${zmr_copyright}</div>
+</body>
+</html>

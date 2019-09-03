@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ZHIQIM-CONFIG PUBLIC "-//ZHIQIM //DTD Zhiqim-Config Configuration 1.5.0//EN" "http://zhiqim.org/xmldtds/zhiqim_config_1_5_0.dtd">
+<zhiqim-config>
+
+    <group id="logging" desc="日志配置">
+        <item key="logging.info" value="info-info" type="protected" desc="信息日志配置" />
+        <item key="logging.error" value="error-fatal" type="protected" desc="错误日志配置" />
+    </group>
+    
+    <group id="logging.info" desc="信息日志配置">
+        <item key="console.out" value="true" type="protected" desc="是否输出到控制台" />
+        <item key="file.out" value="true" type="protected" desc="是否输出到文件" />
+        <item key="file.path" value="./logs/info.log" type="protected" desc="输出到文件路径" />
+    </group>
+
+    <group id="logging.error" desc="错误日志配置">
+        <item key="console.out" value="true" type="protected" desc="是否输出到控制台" />
+        <item key="file.out" value="true" type="protected" desc="是否输出到文件" />
+        <item key="file.path" value="./logs/error.log" type="protected" desc="输出到文件路径" />
+    </group>
+    
+</zhiqim-config>

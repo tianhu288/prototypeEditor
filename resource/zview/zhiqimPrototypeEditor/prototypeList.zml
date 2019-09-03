@@ -1,0 +1,166 @@
+${zhiqim_manager_breadcrumb("g原型资源列表")}
+${zhqim_manager_list_control_js()}
+<script>
+    ListControl.checkBoxName = "prototypeCheckBox";
+    ListControl.deleteHtm = "prototypeDelete.htm";
+    function newPrototypeDialog() {
+        let newDialog = new Z.Dialog();
+        newDialog.title = "新增原型";
+        newDialog.text = '<div class="z-absolute z-l0 z-t0 z-r0 z-pd20" style="bottom:60px;">' +
+            '   <div class="z-show-ib z-w100p z-bd-b">' +
+            '       <div class="z-pd-lr20 z-pd-tb10 z-lh25 z-mg-b-1 z-pointer z-float-left" ' +
+            '           style="color:#3399ff;border-bottom:2px solid #3399FF">空白项目</div>' +
+            '       <div class="z-pd-lr20 z-pd-tb10 z-lh25 z-mg-b-1 z-pointer z-float-left z-color-gray" ' +
+            '           style="border-bottom:2px solid transparent">从模板中创建</div>' +
+            '   </div>' +
+            '   <div class="z-h12"></div>' +
+            '   <div class="z-pd-tb20 z-relative">' +
+            '       <label>' +
+            '           <input class="z-w100p z-pd-r5 z-h35 z-color-666" type="text" style="padding-left:90px;" value="" placeholder="项目名称" spellcheck="false" ' +
+            '               style="border: 1px solid #D5D5D5;">' +
+            '       </label>' +
+            '       <div class="z-absolute z-lh35" style="top:20px;left:10px">项目名称：</div>' +
+            '   </div>' +
+            '   <div class="z-h12"></div>' +
+            '   <div style="display:-webkit-flex;display:flex;" class="prototypeTypeList">' +
+            '       <div class="z-h150 z-bd z-bd-rd3 z-pointer z-px30" data-type="0" style="border-color:#CCC;-webkit-flex:1;flex:1;display:-webkit-flex;' +
+            '           display:flex;justify-content:center;align-items:center;">PC通用</div>' +
+            '       <div class="z-h150 z-bd z-bd-rd3 z-mg-l15 z-pointer z-px30" style="border-color:#CCC;-webkit-flex:1;flex:1;display:-webkit-flex;' +
+            '           display:flex;justify-content:center;align-items:center;">小程序</div>' +
+            '       <div class="z-h150 z-bd z-bd-rd3 z-mg-l15 z-pointer z-px30" data-type="1" style="border-color:#CCC;-webkit-flex:1;flex:1;display:-webkit-flex;' +
+            '           display:flex;justify-content:center;align-items:center;">后台管理</div>' +
+            '       <div class="z-h150 z-bd z-bd-rd3 z-mg-l15 z-pointer z-px30" style="border-color:#CCC;-webkit-flex:1;flex:1;display:-webkit-flex;' +
+            '           display:flex;justify-content:center;align-items:center;">自定义</div>' +
+            '   </div>' +
+            '   <div class="z-h12"></div>' +
+            '   <div class="z-pd-tb20">' +
+            '       <div class="z-bd z-h35 z-relative" style="padding-left:90px;border-color:#CCC">' +
+            '           <select class="z-w100p" style="height:33px;border:none;">' +
+            '               <option value="1920,1080" style="height:35px;line-height:50px;" selected>1920 x 1080</option>' +
+            '               <option value="1680,1050" style="height:35px;line-height:50px;">1680 x 1050</option>' +
+            '               <option value="1440,1024" style="height:35px;line-height:50px;">1440 x 1024</option>' +
+            '           </select>' +
+            '           <div class="z-absolute z-l0 z-t0 z-w90 z-bd-r z-lh35 z-pd-l10" style="height:33px;">选择尺寸:</div>' +
+            '       </div>' +
+            '   </div>' +
+            '</div>' +
+            '<div class="z-absolute z-l0 z-r0 z-b0 z-h60 z-pd-b20 z-text-center">' +
+            '   <button class="z-button z-blue z-large zi-w80" onclick="newPrototypeDialogSure(this);">确定</button>' +
+            '   <div class="z-show-ib z-w40"></div>' +
+            '   <button class="z-button z-large zi-w80" onclick="newPrototypeDialogClose();">取消</button>' +
+            '</div>';
+        newDialog.width = 800;
+        newDialog.height = 500;
+        newDialog.execute();
+        // 事件绑定
+        Z(".prototypeTypeList>div").on("click",(event)=> {
+            let $item = Z.E.current(event);
+            if (!$item.dataset.type)
+                return;
+
+            Z($item).css({
+                "border-color": "#3399ff",
+                "color": "#3399ff",
+            }).addClass("z-active").siblings("div").css({
+                "border-color": "#ccc",
+                "color": "#333",
+            }).removeClass("z-active");
+        })
+    }
+    function newPrototypeDialogSure($this) {
+        let $wrap = $this.parentElement.previousElementSibling;
+        let $nameInput = $wrap.querySelector('input[type=text]');
+        let prototypeName = $nameInput.value;
+        if (!prototypeName.trim())
+            return Z.alert("请输入项目名", ()=> $nameInput.focus());
+
+        let $sizeSelect = $wrap.querySelector('select');
+        let sizeArr = $sizeSelect.value.split(",");
+        let prototypeType = parseFloat(Z(".prototypeTypeList>.z-active")[0].dataset.type);
+
+        //创建新的我的模板
+        let ajax = new Z.Ajax();
+        ajax.setClassName("PrototypePresenter");
+        ajax.setMethodName("doCreateNewPrototype");
+        ajax.addParam("prototypeName", prototypeName);
+        ajax.addParam("prototypeType", prototypeType);
+        ajax.addParam("width", sizeArr[0]);
+        ajax.addParam("height", sizeArr[1]);
+        ajax.setFailureAlert();
+        ajax.setSuccess((responseText)=> {
+            let prototypeId = responseText;
+            let $a = document.createElement("a");
+            $a.href = "prototypeEditor.htm?prototypeId=" + prototypeId;
+            $a.target = "_blank";
+            document.documentElement.appendChild($a);
+            $a.click();
+            Z.L.reload();
+        });
+        ajax.execute();
+        newPrototypeDialogClose();
+    }
+    function newPrototypeDialogClose() {
+        Z.Dialog.close();
+    }
+</script>
+
+<div class="content">
+<#-- 导航栏 -->
+<div data-role="z-tabnav" class="z-tabnav-main z-mg-b20 z-blue">
+    <nav>
+        <ul>
+            <li  class="z-active">原型资源列表</li>
+        </ul>
+        <div class="z-float-left z-mg10">
+            <form name="theForm" method="post">
+                <input class="z-float-left z-mg-l-1 z-input z-w200 ${zmr_color_class}" name="mediaName" value="${mediaName}" maxlength="10" placeholder="名称">
+                <button class="z-float-left z-button z-w80 zi-bd-rd0 z-blue"><i class="z-font z-query"></i>搜索</button>
+            </form>
+        </div>
+        <div class="z-text-right z-mg-t10 z-mg-r5">
+            <button class="z-button z-h30 ${zmr_color_class}" onclick="newPrototypeDialog();"><i class="z-font z-add"></i>新建原型</button>
+            <button class="z-button z-h30 z-red" onclick="ListControl.deleteItems();"><i class="z-font z-delete"></i>删除原型</button>
+        </div>
+    </nav>
+</div>
+
+
+<#-- 列表 -->
+<table class="z-table z-bordered z-bg-white z-pd6">
+    <tr class="z-text-center z-h40 z-bg-gray">
+        <td width="80"><input type="checkbox" name="" data-role="z-checkbox" data-class="z-blue" onchange='Z.FM.doSelectCheckBox("prototypeCheckBox", this.checked?1:2)'></td>
+        <td width="15%">名称</td>
+        <td width="10%">宽度</td>
+        <td width="10%">高度</td>
+        <td width="*">封面图</td>
+        <td width="12%">创建时间</td>
+        <td width="12%">更新时间</td>
+        <td width="200">操作</td>
+    </tr>
+    
+    <#if pageResult.size() == 0>
+        ${zhiqim_manager_no_record (8, "暂时没有原型项目")}
+    </#if>
+    <#for item : pageResult.list()>
+    <tr valign="middle" bgcolor=<#if item_index % 2 == 0>${zmr_tr_odd_bgcolor}<#else>${zmr_tr_even_bgcolor}</#if> class="z-text-center z-h60">
+        <td><input value="${item.getPrototypeId()}" type="checkbox" name="prototypeCheckBox" data-role="z-checkbox" data-class="z-blue"></td>
+        <td>${item.getPrototypeName()}</td>
+        <td>${item.getWidth()}px</td>
+        <td>${item.getHeight()}px</td>
+        <td><a target="_blank" href="${item.getThumbUrl()}">${item.getThumbUrl()}</a></td>
+        <td>${item.getCreateTime()}</td>
+        <td>${item.getUpdateTime()}</td>
+        <td>
+            <button title="编辑素材" class="z-button z-small z-font z-modify ${zmr_color_class}" onclick="window.open('prototypeEditor.htm?prototypeId=${item.getPrototypeId()}');"></button>&nbsp;&nbsp;
+            <button title="删除素材" class="z-button z-small z-red z-font z-delete" onclick="ListControl.deleteItems(this);"></button>
+        </td>
+    </tr>
+    </#for>
+</table>
+
+
+
+
+<#-- 导航翻页 -->
+${zhiqim_manager_paging (pageResult, "prototypeList.htm")}
+</div>

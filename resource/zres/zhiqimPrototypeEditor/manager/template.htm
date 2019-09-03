@@ -1,0 +1,12 @@
+<#-- 主题变量和函数定义 -->
+<#include "/ztmpl/zhiqim_manager/"+themeMain+"/define.htm"/>
+<#-- 判断是否启用了iframe -->
+<#if !ZmrParamDao.isThemeFrame(context)>
+    <#include "/ztmpl/zhiqim_manager/"+themeMain+"/alone.htm"/>
+<#else>
+    <#if request.getPathInContext() == "/"+zhiqim_manager+"/main.htm">
+        <#include "/ztmpl/zhiqim_manager/"+themeMain+"/iframeMain.htm"/>
+    <#else>
+        <#include "/ztmpl/zhiqim_manager/"+themeMain+"/iframeInner.htm"/>
+    </#if>
+</#if>

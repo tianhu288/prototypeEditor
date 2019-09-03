@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ZHIQIM-CONTEXT PUBLIC "-//ZHIQIM //DTD Zhiqim-Context Configuration 1.5.0//EN" "http://zhiqim.org/xmldtds/zhiqim_context_1_5_0.dtd">
+<zhiqim-context>
+    <attribute name="系统名称" key="name" value="知启蒙原型设计" />
+    <attribute name="系统版本" key="version" value="V1.0" />
+
+    <!-- 组件配置 -->
+    <component name="管理台" path="/org/zhiqim/manager/resource" />
+    <component name="文件上传" path="/org/zhiqim/uploadlarge/resource" />
+    
+    <!-- 系统配置 -->
+    <attribute name="系统引导" key="bootstrap" value="com.zhiqim.prototype.manage.PrototypeEditorBootstrap" />
+    
+    
+    
+    <!-- 基本功能 -->
+    <action name="原型列表" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/prototypeList.htm" view="/ztmpl/zhiqim_manager/template.htm" include="/zview/zhiqimPrototypeEditor/prototypeList.zml" class="com.zhiqim.prototype.manage.action.PrototypeListAction" method="list"/>
+    <action name="原型删除" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/prototypeDelete.htm" redirect="/zhiqimPrototypeEditor/prototypeList.htm" class="com.zhiqim.prototype.manage.action.PrototypeListAction" method="delete"/>
+    
+    <action name="元素分类列表" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/elementClassificationList.htm" view="/ztmpl/zhiqim_manager/template.htm" include="/zview/zhiqimPrototypeEditor/elementClassificationList.zml" class="com.zhiqim.prototype.manage.action.ElementClassificationListAction" method="list"/>
+    <action name="元素分类新增" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/elementClassificationAdd.htm" redirect="/zhiqimPrototypeEditor/elementClassificationList.htm" class="com.zhiqim.prototype.manage.action.ElementClassificationListAction" method="add"/>
+    <action name="元素分类更新" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/elementClassificationUpdate.htm" redirect="/zhiqimPrototypeEditor/elementClassificationList.htm" class="com.zhiqim.prototype.manage.action.ElementClassificationListAction" method="update"/>
+    <action name="元素分类删除" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/elementClassificationDelete.htm" redirect="/zhiqimPrototypeEditor/elementClassificationList.htm" class="com.zhiqim.prototype.manage.action.ElementClassificationListAction" method="delete"/>
+    
+    <action name="组件分类列表" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/libClassificationList.htm" view="/ztmpl/zhiqim_manager/template.htm" include="/zview/zhiqimPrototypeEditor/libClassificationList.zml" class="com.zhiqim.prototype.manage.action.LibClassificationListAction" method="list"/>
+    <action name="组件分类新增" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/libClassificationAdd.htm" redirect="/zhiqimPrototypeEditor/libClassificationList.htm" class="com.zhiqim.prototype.manage.action.LibClassificationListAction" method="add"/>
+    <action name="组件分类更新" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/libClassificationUpdate.htm" redirect="/zhiqimPrototypeEditor/libClassificationList.htm" class="com.zhiqim.prototype.manage.action.LibClassificationListAction" method="update"/>
+    <action name="组件分类删除" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/libClassificationDelete.htm" redirect="/zhiqimPrototypeEditor/libClassificationList.htm" class="com.zhiqim.prototype.manage.action.LibClassificationListAction" method="delete"/>
+
+    <action name="系统组件资源列表" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemLibList.htm" view="/ztmpl/zhiqim_manager/template.htm" include="/zview/zhiqimPrototypeEditor/systemLibList.zml" class="com.zhiqim.prototype.manage.action.SystemLibListAction" method="list"/>
+    <action name="系统组件资源添加" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemLibAdd.htm" redirect="/zhiqimPrototypeEditor/systemLibList.htm" class="com.zhiqim.prototype.manage.action.SystemLibListAction" method="add"/>
+    <action name="系统组件资源更新" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemLibUpdate.htm" redirect="/zhiqimPrototypeEditor/systemLibList.htm" class="com.zhiqim.prototype.manage.action.SystemLibListAction" method="update"/>
+    <action name="系统组件资源删除" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemLibDelete.htm" redirect="/zhiqimPrototypeEditor/systemLibList.htm" class="com.zhiqim.prototype.manage.action.SystemLibListAction" method="delete"/>
+    
+    <action name="系统图标资源列表" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemIconList.htm" view="/ztmpl/zhiqim_manager/template.htm" include="/zview/zhiqimPrototypeEditor/systemIconList.zml" class="com.zhiqim.prototype.manage.action.SystemIconListAction" method="list"/>
+    <action name="系统图标资源添加" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemIconAdd.htm" redirect="/zhiqimPrototypeEditor/systemIconList.htm" class="com.zhiqim.prototype.manage.action.SystemIconListAction" method="add"/>
+    <action name="系统图标资源更新" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemIconUpdate.htm" redirect="/zhiqimPrototypeEditor/systemIconList.htm" class="com.zhiqim.prototype.manage.action.SystemIconListAction" method="update"/>
+    <action name="系统图标资源删除" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemIconDelete.htm" redirect="/zhiqimPrototypeEditor/systemIconList.htm" class="com.zhiqim.prototype.manage.action.SystemIconListAction" method="delete"/>
+    
+    <action name="系统图片资源列表" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemImageList.htm" view="/ztmpl/zhiqim_manager/template.htm" include="/zview/zhiqimPrototypeEditor/systemImageList.zml" class="com.zhiqim.prototype.manage.action.SystemImageListAction" method="list"/>
+    <action name="系统图片资源删除" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/systemImageDelete.htm" redirect="/zhiqimPrototypeEditor/systemImageList.htm" class="com.zhiqim.prototype.manage.action.SystemImageListAction" method="delete"/>
+    
+    <action name="我的组件资源列表" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/userLibList.htm" view="/ztmpl/zhiqim_manager/template.htm" include="/zview/zhiqimPrototypeEditor/userLibList.zml" class="com.zhiqim.prototype.manage.action.UserLibListAction" method="list"/>
+    <action name="我的组件资源删除" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/userLibDelete.htm" redirect="/zhiqimPrototypeEditor/userLibList.htm" class="com.zhiqim.prototype.manage.action.UserLibListAction" method="delete"/>
+
+    <action name="原型设计" interceptor="chkZmrLogin" path="/zhiqimPrototypeEditor/prototypeEditor.htm" view="/ztmpl/zhiqim_manager/inner.htm" include="/zview/zhiqimPrototypeEditor/prototypeEditor.zml" class="com.zhiqim.prototype.manage.action.PrototypeEditorAction" />
+
+    
+</zhiqim-context>

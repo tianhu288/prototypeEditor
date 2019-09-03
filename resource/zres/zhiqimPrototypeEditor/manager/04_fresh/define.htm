@@ -1,0 +1,53 @@
+<#--变量定义-->
+<#var zmr_theme.css = context.getRootPath("/ztmpl/zhiqim_manager/"+themeMain+"/fresh_2018010101.css")/>
+<#var zmr_theme.js = new ZmrCdnRuntime(context, "/ztmpl/zhiqim_manager/"+themeMain+"/fresh_2018010101.js")/>
+<#var zmr_color_class = "z-cyan"/>
+<#var zmr_sidebar_width = 200/>
+<#var zmr_topnav_height = 55/>
+<#var zmr_breadcrumb_height = 40/>
+<#var zmr_title_bgcolor = "#f5f5f5"/>
+<#var zmr_thead_bgcolor = "#f5f5f5"/>
+<#var zmr_tr_odd_bgcolor = "#f6ffff"/>
+<#var zmr_tr_even_bgcolor = "#ffffff"/>
+<#var zmr_tr_over_bgcolor = "#f6ffff"/>
+<#var zmr_tfoot_bgcolor = "#ffffff"/>
+<#--面包屑 -->
+<#function zhiqim_manager_breadcrumb_name(name)>
+<div class="breadcrumb z-h40 z-lh40 z-bg-white z-bd-b">
+    <span class="z-pd-l20">${name}</span>
+</div>
+</#function>
+<#--面包屑一级栏目 -->
+<#function zhiqim_manager_breadcrumb(name)>
+<div class="breadcrumb z-h40 z-lh40 z-bg-white z-bd-b">
+    <i class="z-font z-house z-pd-l20 z-px18"></i><span class="z-mg-l3"><a href="${context.getRootPath(ZmlContexts.parseZmlContent(request, ZmrParamDao.getMainIndexUrl(context)))}">首页</a>&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;&nbsp;<span style="color:#4bacc6;">${name}</span></span>
+</div>
+</#function>
+<#--面包屑二级栏目 -->
+<#function zhiqim_manager_breadcrumb_parent(parentUrl, parentName, name)>
+<div class="breadcrumb z-h40 z-lh40 z-bg-white z-bd-b">
+    <i class="z-font z-house z-pd-l15 z-px18"></i><span class="z-mg-l3"><a href="${context.getRootPath(ZmlContexts.parseZmlContent(request, ZmrParamDao.getMainIndexUrl(context)))}">首页</a>&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;&nbsp;<a href="${parentUrl}">${parentName}</a>&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;&nbsp;<span style="color:#4bacc6;">${name}</span></span>
+</div>
+</#function>
+<#--面包屑三级栏目 -->
+<#function zhiqim_manager_breadcrumb_parent_last(parentUrl, parentName, lastUrl, lastName, name)>
+<div class="breadcrumb z-h40 z-lh40 z-bg-white z-bd-b">
+    <i class="z-font z-house z-pd-l15 z-px18"></i><span class="z-mg-l3"><a href="${context.getRootPath(ZmlContexts.parseZmlContent(request, ZmrParamDao.getMainIndexUrl(context)))}">首页</a>&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;&nbsp;<a href="${parentUrl}">${parentName}</a>&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;&nbsp;<a href="${lastUrl}">${lastName}</a>&nbsp;&nbsp;&nbsp;>>&nbsp;&nbsp;&nbsp;<span style="color:#4bacc6;">${name}</span></span>
+</div>
+</#function>
+<#--显示记录分页-->
+<#function zhiqim_manager_paging(result, link)>
+<table class="z-table z-bordered zi-bd-t-none z-bg-white">
+<tr class="z-h50">  
+    <td><div class="z-float-right z-mg-r10">${PagingStd.toHtmlLink(result, link)}</div></td>
+</tr>
+</table>
+</#function>
+<#--显示记录分页JS-->
+<#function zhiqim_manager_paging_jsMethod(result, jsMethod)>
+<table class="z-table z-bordered zi-bd-t-none z-bg-white">
+<tr class="z-h40">  
+    <td><div class="z-float-right z-mg-r10">${PagingStd.toHtmlClick(result, jsMethod)}</div></td>
+</tr>
+</table>
+</#function>

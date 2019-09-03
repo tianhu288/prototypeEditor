@@ -1,0 +1,243 @@
+${zhiqim_manager_breadcrumb("系统组件资源列表")}
+${zhqim_manager_list_control_js()}
+<style>
+    .editItemLabel {
+        width: 450px;
+        padding-left: 100px;
+    }
+    .editItemLabel>div {
+        width: 100px;
+    }
+</style>
+<script>
+    ListControl.checkBoxName = "sysLibCheckBox";
+    ListControl.deleteHtm = "systemLibDelete.htm";
+    // 组件分类
+    const libClsList = ${Jsons.toString(libClsList)};
+    // 组件参数
+    let dialogTitle = "添加组件";
+    let title = "";
+    let id = "";
+    let prototypeType = 0;
+    let libStatus = 1;
+    let editable = 0;
+    let type = "";
+    let secType = "";
+    let libKeys = "";
+    let htmlSource = "";
+    // 添加图标弹窗
+    function editLibDialog() {
+        let addHtm = "systemLib" + (id ? "Update" : "Add") + ".htm";
+        let newDialog = new Z.Dialog();
+        newDialog.title = dialogTitle || "添加组件";
+        newDialog.text = '<form method="post" action="'+ addHtm +'"><div class="z-absolute z-l0 z-t0 z-r0 z-pd20" style="bottom:60px;">' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>名称：</div>' +
+            '       <input name="title" class="z-input editItemInput" type="text" value="'+(title||'')+'" placeholder="名称">' +
+            '   </label>' +
+            '   <label class="z-hide editItemLabel z-event-none">' +
+            '       <input name="id" class="z-input editItemInput" type="text" value="'+(id||'')+'">' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>适用类型：</div>' +
+            '       <select name="prototypeType" class="z-select editItemInput"> ' +
+            '           <option value="0"'+ (prototypeType===0?' selected':'') +'>通用</option>' +
+            '           <option value="1"'+ (prototypeType===1?' selected':'') +'>后台管理</option>' +
+            '       </select>' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>状态：</div>' +
+            '       <select name="libStatus" class="z-select editItemInput"> ' +
+            '           <option value="1"'+ (libStatus===1?' selected':'') +'>正常</option>' +
+            '           <option value="2"'+ (libStatus===2?' selected':'') +'>停用</option>' +
+            '       </select>' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>可编辑：</div>' +
+            '       <select name="editable" class="z-select editItemInput"> ' +
+            '           <option value="0"'+ (editable===0?' selected':'') +'>正常编辑</option>' +
+            '           <option value="1"'+ (editable===1?' selected':'') +'>不可编辑</option>' +
+            '           <option value="2"'+ (editable===2?' selected':'') +'>仅大小可编辑</option>' +
+            '           <option value="3"'+ (editable===3?' selected':'') +'>仅位置可编辑</option>' +
+            '           <option value="4"'+ (editable===4?' selected':'') +'>仅基础样式（背景、颜色等）可编辑</option>' +
+            '       </select>' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>分类：</div>' +
+            '       <select name="type" class="z-select editItemInput">';
+        for (let item of libClsList) {
+            newDialog.text +=
+                '       <option value="'+ item.clsCode +'"'+ (type===item.clsCode?' selected':'') +'>'+ item.clsName +'</option>';
+        }
+        newDialog.text +=
+            '       </select>' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>添加方式：</div>' +
+            '       <label class="z-h30 z-lh30 z-pointer"><input type="radio" name="addMethod" value="canvas" class="z-radio" onchange="addMethodSwitch(this);">从画布添加</label>' +
+            '       <label class="z-h30 z-lh30 z-pointer z-mg-l30"><input type="radio" name="addMethod" value="source" class="z-radio" onchange="addMethodSwitch(this);">自定义源码</label>' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel htmlSource-label" style="pointer-events: none;opacity: .7;">' +
+            '       <div>自定义类型：</div>' +
+            '       <input name="secType" class="z-input editItemInput" type="text" value="'+(secType||'')+'" placeholder="自定义类型">' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel htmlSource-label" style="pointer-events: none;opacity: .7;">' +
+            '       <div>自定义源码：</div>' +
+            '       <textarea name="htmlSource" class="z-textarea editItemInput" placeholder="组件源码">'+(htmlSource||'')+'</textarea>' +
+            '       <span>输入源代码</span>' +
+            '   </label>' +
+            '   <label class="z-show-b editItemLabel">' +
+            '       <div>关键词：</div>' +
+            '       <textarea name="eleKeys" class="z-textarea editItemInput" placeholder="关键词" style="height:52px">'+(libKeys||'')+'</textarea>' +
+            '       <span>多个关键词，以英文逗号分隔</span>' +
+            '   </label>' +
+            '</div>' +
+            '<div class="z-absolute z-l0 z-r0 z-b0 z-h60 z-pd-b20 z-text-center">' +
+            '   <button type="button" class="z-button z-large zi-w80" onclick="Z.Dialog.close();">取消</button>' +
+            '   <div class="z-show-ib z-w20"></div>' +
+            '   <button type="submit" class="z-button z-blue z-large zi-w80" onclick="return editLibSure();">确定</button>' +
+            '</div>' +
+            '</form>';
+        newDialog.width = 600;
+        newDialog.height = 620;
+        newDialog.execute();
+    }
+    // 切换添加方式
+    function addMethodSwitch($radio) {
+        let method = $radio.value;
+        if (method === "source") {
+            Z(".htmlSource-label").css({
+                "pointer-events": "auto",
+                "opacity": 1,
+            });
+        } else {
+            Z(".htmlSource-label").css({
+                "pointer-events": "none",
+                "opacity": .7,
+            });
+        }
+    }
+    // 编辑组件
+    function editLibSure(event) {
+        let method = document.querySelector('[name=addMethod]:checked').value;
+        if (method === "canvas") {
+            let $a = document.createElement("a");
+            $a.href = "prototypeEditor.htm";
+            $a.href += "?createLib=true&";
+            $a.href += "title="+document.querySelector('[name=title]').value+"&";
+            $a.href += "id="+document.querySelector('[name=id]').value+"&";
+            $a.href += "prototypeType="+document.querySelector('[name=prototypeType]').value+"&";
+            $a.href += "eleStatus="+document.querySelector('[name=eleStatus]').value+"&";
+            $a.href += "editable="+document.querySelector('[name=editable]').value+"&";
+            $a.href += "type="+document.querySelector('[name=type]').value+"&";
+            $a.href += "eleKeys="+document.querySelector('[name=eleKeys]').value+"&";
+            $a.target = "_blank";
+            $a.click();
+            $a = null;
+            return false;
+        }
+        let htmlSource = document.querySelector('[name=htmlSource]').value.trim();
+        if (!htmlSource) {
+            Z.alert("请输入组件源码");
+            return false;
+        }
+    }
+    // 编辑图标
+    function editTheLib() {
+        let $item = Z($this).parent().parent();
+        let $$td = $item.find('td');
+        title = $$td[1].innerHTML.trim();
+        id = $$td[2].innerHTML.trim();
+        type = $$td[3].dataset.value.trim();
+        let iconClass = $$td[4].innerHTML.trim();
+        let eleStatus = $$td[5].dataset.value.trim();
+        let eleKeys = $$td[7].innerHTML.trim();
+        editIconDialog ();
+    }
+</script>
+<div class="content">
+<#-- 导航栏 -->
+<div data-role="z-tabnav" class="z-tabnav-main z-mg-b20 z-blue">
+    <nav>
+        <ul>
+            <li class="z-active">系统组件</li>
+            <li class="zi-pd0"><a onclick="Z.E.stop(event);" class="z-show-b zi-pd-lr15 z-h100p" href="systemIconList.htm">系统图标</a></li>
+            <li class="zi-pd0"><a onclick="Z.E.stop(event);" class="z-show-b zi-pd-lr15 z-h100p" href="systemImageList.htm">系统图片</a></li>
+            <li class="zi-pd0"><a onclick="Z.E.stop(event);" class="z-show-b zi-pd-lr15 z-h100p" href="userLibList.htm">我的组件</a></li>
+        </ul>
+        <div class="z-float-left z-mg10">
+            <form name="theForm" method="post">
+                <label class="z-float-left">
+                    <select class="z-select z-w80" data-role="z-select" data-class="${zmr_color_class}" name="releaseStatus" id="releaseStatus">
+                        <option value="0">类型</option>
+                    </select>
+                </label>
+                <label class="z-float-left z-mg-l-1">
+                    <select class="z-select z-w80" data-role="z-select" data-class="${zmr_color_class}" name="releaseStatus" id="releaseStatus">
+                        <option value="0">状态</option>
+                    </select>
+                </label>
+                <input class="z-float-left z-mg-l-1 z-input z-w150 ${zmr_color_class}" name="mediaName" value="${mediaName}" maxlength="10" placeholder="名称/关键词">
+                <button class="z-float-left z-button z-w80 zi-bd-rd0 z-blue"><i class="z-font z-query"></i>查询</button>
+            </form>
+        </div>
+        <div class="z-text-right z-mg-t10 z-mg-r5">
+            <button class="z-button z-h30 ${zmr_color_class}" onclick="editLibDialog();"><i class="z-font z-add"></i>添加组件</button>
+            <button class="z-button z-red" onclick="ListControl.deleteItems();"><i class="z-font z-delete"></i>删除组件</button>
+        </div>
+    </nav>
+</div>
+
+<#-- 列表 -->
+<table class="z-table z-bordered z-bg-white z-pd6">
+    <tr class="z-text-center z-h40 z-bg-gray">
+        <td width="80"><input type="checkbox" name="" data-role="z-checkbox" data-class="z-blue" onchange='Z.FM.doSelectCheckBox("sysLibCheckBox", this.checked?1:2)'></td>
+        <td width="10%">名称</td>
+        <td width="10%">id</td>
+        <td width="10%">分类</td>
+        <td width="10%">自定义类型</td>
+        <td width="10%">状态</td>
+        <td width="12%">缩略图</td>
+        <td width="*">关键词</td>
+        <td width="12%">排序</td>
+        <td width="8%">操作</td>
+    </tr>
+
+    <#if pageResult.size() == 0>
+    ${zhiqim_manager_no_record (9, "暂时没有元素分类")}
+    </#if>
+    <#for item : pageResult.list()>
+    <tr valign="middle" bgcolor=<#if item_index % 2 == 0>${zmr_tr_odd_bgcolor}<#else>${zmr_tr_even_bgcolor}</#if> class="z-text-center z-h60">
+        <td><input value="${item.getId()}" type="checkbox" name="sysLibCheckBox" data-role="z-checkbox" data-class="z-blue"></td>
+        <td>${item.getTitle()}</td>
+        <td>${item.getId()}</td>
+        <td data-value="${item.getType()}"><#if Validates.isNotEmpty(item.getType())>${clsCodeMap.get(item.getType()).getClsName()}</#if></td>
+        <td>${item.getSecType()}</td>
+        <td data-value="${item.getLibStatus()}"><#if item.getLibStatus() == 1>正常<#elseif item.getLibStatus() == 2>停用</#if></td>
+        <td class="clsSvgIcon">${item.getThumbUrl()}</td>
+        <td>${item.getLibKeys()}</td>
+        <td>
+            <i title="上移" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M896.93696 476.04736 512 91.1104 127.06304 476.04736 177.89952 526.88384 476.04736 228.74112 476.04736 932.8896 547.95264 932.8896 547.95264 228.74112 846.10048 526.88384Z" fill="#73777A"></path></svg>
+            </i>
+            <i title="下移" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M127.06304 547.95264L512 932.8896 896.93696 547.95264 846.10048 497.11616 547.95264 795.25887999 547.95264 91.11039999 476.04736 91.11039999 476.04736 795.25887999 177.89952 497.11616Z" fill="#73777A"></path></svg>
+            </i>
+            <i title="置顶" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M99.004 128.106h826.565v64H99.004zM480.1 299.396h64V926.4h-64z" fill="#73777A"></path><path d="M254.457 493.962l257.915-260.48 45.478 45.03-257.914 260.48z" fill="#73777A"></path><path d="M468.447 279.632l45.478-45.03 257.915 260.48-45.479 45.03z" fill="#73777A"></path></svg>
+            </i>
+            <i title="置底" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M924.996 895.894l-826.565 0 0-64L924.996 831.894zM543.9 724.604l-64 0L479.9 97.6l64 1e-8z" fill="#73777A"></path><path d="M769.543 530.038l-257.915 260.48-45.478-45.03 257.914-260.48z" fill="#73777A"></path><path d="M555.553 744.368l-45.478 45.03-257.915-260.48 45.479-45.03z" fill="#73777A"></path></svg>
+            </i>
+        </td>
+        <td>
+            <button title="编辑分类" class="z-button z-xsmall z-font z-modify ${zmr_color_class}" onclick="editTheLib(this);"></button>&nbsp;&nbsp;
+            <button title="删除分类" class="z-button z-xsmall z-red z-font z-delete" onclick="ListControl.deleteItems(this);"></button>
+        </td>
+    </tr>
+    </#for>
+</table>
+
+<#-- 导航翻页 -->
+${zhiqim_manager_paging (pageResult, "prototypePartList.htm")}
+</div>

@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zhiqim-dbo>
+
+<config version="1.2.0" dbType="mysql" folder="../src/dbo" initDataWidth="820">
+<![CDATA[
+/*
+ * 版权所有 (C) 2015 知启蒙(ZHIQIM) 保留所有权利。
+ * 
+ * 指定登记&发行网站： https://www.zhiqim.com/ 欢迎加盟知启蒙，[编程有你，知启蒙一路随行]。
+ *
+ * 本文采用《知启蒙许可证》，除非符合许可证，否则不可使该文件！
+ * 1、您可以免费使用、修改、合并、出版发行和分发，再授权软件、软件副本及衍生软件；
+ * 2、您用于商业用途时，必须在原作者指定的登记网站进行实名登记；
+ * 3、您在使用、修改、合并、出版发行和分发时，必须包含版权声明、许可声明，及保留原作者的著作权、商标和专利等知识产权；
+ * 4、您在互联网、移动互联网等大众网络下发行和分发再授权软件、软件副本及衍生软件时，必须在原作者指定的发行网站进行发行和分发；
+ * 5、您可以在以下链接获取一个完整的许可证副本。
+ * 
+ * 许可证链接：http://zhiqim.org/licenses/LICENSE.htm
+ *
+ * 除非法律需要或书面同意，软件由原始码方式提供，无任何明示或暗示的保证和条件。详见完整许可证的权限和限制。
+ */
+]]>
+</config>
+
+<package name="com.zhiqim.prototype.dbo" type="true" desc="原型设计主表">
+
+    <table name="PROTOTYPE_CANVAS" desc="画布表" key="PROTOTYPE_ID" type="InnoDB">
+        <field column="PROTOTYPE_ID" type="long" length="" notNull="true" desc="原型编号"/>
+        <field column="PROTOTYPE_TITLE" type="string" length="32" notNull="true" desc="原型名称"/>
+        <field column="PROTOTYPE_TYPE" type="byte" length="" notNull="true" desc="原型类型：0：通用、1：后台管理、"/>
+        <field column="THUMB_URL" type="string" length="20000" notNull="true" desc="封面缩略图"/>
+        <field column="APP_ICON_URL" type="string" length="20000" notNull="false" desc="客户端启动图标"/>
+        <field column="CREATE_TIME" type="string" length="19,char" notNull="true" desc="创建时间"/>
+        <field column="UPDATE_TIME" type="string" length="19,char" notNull="true" desc="更新时间"/>
+        <field column="WIDTH" type="decimal" length="16,8" notNull="true" desc="页面缺省宽度"/>
+        <field column="HEIGHT" type="decimal" length="16,8" notNull="true" desc="页面缺省高度"/>
+        <field column="CANVAS_LEFT" type="decimal" length="16,8" notNull="true" desc="当前页面偏移left"/>
+        <field column="CANVAS_TOP" type="decimal" length="16,8" notNull="true" desc="当前页面偏移top"/>
+        <field column="SCALE" type="decimal" length="8,4" notNull="true" desc="当前页面缩放"/>
+        <field column="SCREEN_ID" type="long" length="" notNull="true" desc="当前页面编号"/>
+        <field column="SHOW_RULER" type="boolean" length="" notNull="true" desc="是否显示标尺"/>
+        <field column="SHOW_LEFT_PANEL" type="boolean" length="" notNull="true" desc="是否显示左侧编辑"/>
+        <field column="SHOW_RIGHT_PANEL" type="boolean" length="" notNull="true" desc="是否显示右侧编辑"/>
+        <field column="SHOW_GRID" type="boolean" length="" notNull="true" desc="是否显示网格"/>
+        <field column="SHOW_LAYOUT" type="boolean" length="" notNull="true" desc="是否显示布局"/>
+        <field column="LAYOUT_ROW_SPACE" type="decimal" length="8,4" notNull="true" desc="布局行间隔"/>
+        <field column="LAYOUT_ROW_HEIGHT" type="decimal" length="8,4" notNull="true" desc="布局行高度"/>
+        <field column="LAYOUT_ROW_NUM" type="int" length="" notNull="true" desc="布局行数"/>
+        <field column="LAYOUT_COLUMN_NUM" type="int" length="" notNull="true" desc="布局列数"/>
+        <field column="LAYOUT_COLUMN_SPACE" type="decimal" length="8,4" notNull="true" desc="布局列间隔"/>
+        <field column="LAYOUT_COLUMN_WIDTH" type="decimal" length="8,4" notNull="true" desc="布局列宽度"/>
+        <field column="INIT_DONE" type="boolean" length="" notNull="true" desc="是否完成初始化，首次页面加载设置画布属性"/>
+    </table>
+
+    <table name="PROTOTYPE_SCREEN" desc="页面表" key="PROTOTYPE_ID,ID" type="InnoDB">
+        <field column="PROTOTYPE_ID" type="long" length="" notNull="true" desc="原型编号"/>
+        <field column="ID" type="long" length="" notNull="true" desc="页面编号，从1开始"/>
+        <field column="PID" type="long" length="" notNull="true" desc="页面索引"/>
+        <field column="TITLE" type="string" length="32" notNull="true" desc="页面标题"/>
+        <field column="GROUP_ID" type="long" length="" notNull="true" desc="页面分组id"/>
+        <field column="GROUP_TITLE" type="string" length="16" notNull="true" desc="页面分组名"/>
+        <field column="FILE_NAME" type="string" length="32" notNull="true" desc="页面文件名"/>
+        <field column="THUMB_URL" type="string" length="20000" notNull="true" desc="页面缩略图"/>
+        <field column="EDITABLE" type="byte" length="" notNull="true" desc="页面属性可编辑，不影响页面内元素：0：正常，1：不允许增减组件、删除页面、修改filename"/>
+        <field column="SYSTEMATIC" type="boolean" length="" notNull="true" desc="系统设置页面，功能限定"/>
+        <field column="WIDTH" type="decimal" length="16,8" notNull="true" desc="页面宽度"/>
+        <field column="HEIGHT" type="decimal" length="16,8" notNull="true" desc="页面高度"/>
+        <field column="HEIGHT_AUTO" type="boolean" length="" notNull="true" desc="高度自动"/>
+        <field column="LINES_HORIZONTAL" type="string" length="5000" notNull="false" desc="水平辅助线，对象字符串"/>
+        <field column="LINES_VERTICAL" type="string" length="5000" notNull="false" desc="垂直辅助线，对象字符串"/>
+        <field column="ACTION" type="string" length="5000" notNull="false" desc="事件列表，对象字符串"/>
+    </table>
+
+    <table name="PROTOTYPE_ELEMENT" desc="元素表" key="PROTOTYPE_ID,SCREEN_ID,ID" type="InnoDB">
+        <field column="PROTOTYPE_ID" type="long" length="" notNull="true" desc="原型编号"/>
+        <field column="SCREEN_ID" type="long" length="" notNull="true" desc="页面编号"/>
+        <field column="ID" type="long" length="" notNull="true" desc="元素id，可用于查找页面dom"/>
+        <field column="Z_INDEX" type="long" length="" notNull="true" desc="元素层级"/>
+        <field column="TITLE" type="string" length="32" notNull="true" desc="元素名称"/>
+        <field column="TYPE" type="string" length="16" notNull="true" desc="元素类型：text、image、shape、rect、audio、video、html、frame、dateTime、"/>
+        <field column="SEC_TYPE" type="string" length="16" notNull="false" desc="元素次级类型，某些类型元素拥有"/>
+        <field column="ELE_STATUS" type="byte" length="" notNull="true" desc="元素状态：1表示正常，2表示已删除，3表示已隐藏，4表示已锁定"/>
+        <field column="THUMB_URL" type="string" length="20000" notNull="true" desc="封面缩略图"/>
+        <field column="EDITABLE" type="byte" length="" notNull="true" desc="可编辑：0：正常，1：不可编辑，2：仅大小，3：仅位置，4：基础样式，5：仅文字内容"/>
+        <field column="ELE_KEYS" type="string" length="5000" notNull="false" desc="关键词"/>
+        <field column="HTML_SOURCE" type="string" length="20000" notNull="false" desc="特殊类型的素材，只能用源码表示"/>
+        <field column="WIDTH" type="decimal" length="16,8" notNull="true" desc="元素宽度"/>
+        <field column="HEIGHT" type="decimal" length="16,8" notNull="true" desc="元素高度"/>
+        <field column="X" type="decimal" length="16,8" notNull="true" desc="水平偏移"/>
+        <field column="X_RIGHT" type="boolean" length="" notNull="true" desc="偏移标准：true：right，false：left，默认false"/>
+        <field column="Y" type="decimal" length="16,8" notNull="true" desc="垂直偏移"/>
+        <field column="Y_BOTTOM" type="boolean" length="" notNull="true" desc="偏移标准：true：bottom，false：top，默认false"/>
+        <field column="ROTATION" type="int" length="" notNull="true" desc="旋转角度"/>
+        <field column="OPACITY" type="decimal" length="8,4" notNull="true" desc="不透明度"/>
+        <field column="AUTO_SIZE" type="boolean" length="" notNull="true" desc="是否自动大小"/>
+        <field column="LOCKED" type="boolean" length="" notNull="true" desc="是否锁定"/>
+        <field column="VISIBLE" type="boolean" length="" notNull="true" desc="是否显示"/>
+        <field column="PROPAGATE_EVENTS" type="boolean" length="" notNull="true" desc="是否事件穿透"/>
+        <field column="LIB_ID" type="long" length="" notNull="false" desc="组件ID"/>
+        <field column="LIB_TITLE" type="string" length="32" notNull="false" desc="组件名称"/>
+        <field column="BACKGROUND_COLOR" type="string" length="16" notNull="false" desc="背景颜色"/>
+        <field column="BORDER_WIDTH" type="int" length="" notNull="false" desc="边框大小"/>
+        <field column="BORDER_STYLE" type="string" length="16" notNull="false" desc="边框类型"/>
+        <field column="BORDER_COLOR" type="string" length="16" notNull="false" desc="边框颜色"/>
+        <field column="RADIUS_TOP_LEFT" type="int" length="" notNull="false" desc="左上圆角"/>
+        <field column="RADIUS_TOP_RIGHT" type="int" length="" notNull="false" desc="右上圆角"/>
+        <field column="RADIUS_BOTTOM_LEFT" type="int" length="" notNull="false" desc="左下圆角"/>
+        <field column="RADIUS_BOTTOM_RIGHT" type="int" length="" notNull="false" desc="右下圆角"/>
+        <field column="ACTION" type="string" length="20000" notNull="false" desc="事件列表:数组列表{id:&quot;&quot;,type:&quot;&quot;,sort:&quot;&quot;,title:&quot;&quot;,callback:&quot;&quot;,delay:&quot;&quot;,animation:&quot;&quot;,animationEasing:&quot;&quot;,duration:&quot;&quot;}"/>
+        <field column="ENABLE_MASK" type="boolean" length="" notNull="true" desc="开启蒙版"/>
+        <field column="MASK" type="string" length="10000" notNull="false" desc="蒙版，对象字符串"/>
+        <field column="ENABLE_SHADOW" type="boolean" length="" notNull="true" desc="开启阴影"/>
+        <field column="SHADOW_COLOR" type="string" length="16" notNull="false" desc="阴影颜色"/>
+        <field column="SHADOW_X" type="int" length="" notNull="false" desc="阴影x偏移"/>
+        <field column="SHADOW_Y" type="int" length="" notNull="false" desc="阴影y偏移"/>
+        <field column="SHADOW_BLUR" type="int" length="" notNull="false" desc="阴影模糊大小"/>
+        <field column="ENABLE_FILTER" type="boolean" length="" notNull="true" desc="开启滤镜"/>
+        <field column="FILTER_BLUR" type="decimal" length="8,4" notNull="false" desc="模糊"/>
+        <field column="FILTER_SATURATION" type="decimal" length="8,4" notNull="false" desc="饱和"/>
+        <field column="FILTER_BRIGHTNESS" type="decimal" length="8,4" notNull="false" desc="亮度"/>
+        <field column="FILTER_CONTRAST" type="decimal" length="8,4" notNull="false" desc="对比"/>
+        <field column="FILTER_GRAYSCALE" type="decimal" length="8,4" notNull="false" desc="灰度"/>
+        <field column="FILTER_SEPIA" type="decimal" length="8,4" notNull="false" desc="加深"/>
+        <field column="FILTER_HUE" type="decimal" length="8,4" notNull="false" desc="色相"/>
+        <field column="FILTER_INVERT" type="decimal" length="8,4" notNull="false" desc="反相"/>
+        <field column="ENABLE_TRANSITION" type="boolean" length="" notNull="true" desc="开启动态特效"/>
+        <field column="TEXT" type="string" length="20000" notNull="false" desc="文字内容"/>
+        <field column="TEXT_HEIGHT_AUTO" type="boolean" length="" notNull="false" desc="文字高度自动"/>
+        <field column="TEXT_FONT" type="string" length="100" notNull="false" desc="文字字体"/>
+        <field column="TEXT_SIZE" type="int" length="" notNull="false" desc="字体大小"/>
+        <field column="TEXT_COLOR" type="string" length="16" notNull="false" desc="字体颜色"/>
+        <field column="LINE_HEIGHT" type="decimal" length="8,4" notNull="false" desc="行高"/>
+        <field column="LINE_HEIGHT_AUTO" type="boolean" length="" notNull="false" desc="行高自动"/>
+        <field column="LETTER_SPACE" type="decimal" length="8,4" notNull="false" desc="字距"/>
+        <field column="TEXT_ALIGN" type="string" length="16" notNull="false" desc="水平对齐："/>
+        <field column="VERTICAL_ALIGN" type="string" length="16" notNull="false" desc="垂直对齐："/>
+        <field column="TEXT_BOLD" type="boolean" length="" notNull="false" desc="文字加粗"/>
+        <field column="TEXT_ITALIC" type="boolean" length="" notNull="false" desc="文字斜体"/>
+        <field column="TEXT_UNDERLINE" type="boolean" length="" notNull="false" desc="文字下划线"/>
+        <field column="TEXT_SHADOW_X" type="int" length="" notNull="false" desc="文字投影偏移x"/>
+        <field column="TEXT_SHADOW_Y" type="int" length="" notNull="false" desc="文字投影偏移y"/>
+        <field column="TEXT_SHADOW_BLUR" type="int" length="" notNull="false" desc="文字投影模糊"/>
+        <field column="ICON_CLASS" type="string" length="32" notNull="false" desc="图标样式"/>
+        <field column="IMAGE_FILE" type="string" length="20000" notNull="false" desc="图片源:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="IMAGE_REPEAT" type="boolean" length="" notNull="false" desc="是否重复平铺"/>
+        <field column="ASPECT_RATIO" type="decimal" length="16,8" notNull="false" desc="源图片纵横比"/>
+        <field column="SHAPE_TYPE_NAME" type="string" length="16" notNull="false" desc="形状类型："/>
+        <field column="URL" type="string" length="200" notNull="false" desc="内嵌网页地址"/>
+        <field column="SCROLLABLE" type="boolean" length="" notNull="false" desc="内嵌网页可滚动"/>
+        <field column="HTML" type="string" length="20000" notNull="false" desc="自定义源码"/>
+        <field column="AUDIO_WAV" type="string" length="20000" notNull="false" desc="音频文件WAV:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="AUDIO_MP3" type="string" length="20000" notNull="false" desc="音频文件MP3:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="AUDIO_OGG" type="string" length="20000" notNull="false" desc="音频文件OGG:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="AUDIO_AAC" type="string" length="20000" notNull="false" desc="音频文件AAC:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_TYPE" type="string" length="16" notNull="false" desc="视频引用方式："/>
+        <field column="VIDEO_MP4" type="string" length="20000" notNull="false" desc="视频文件MP4:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_OGG" type="string" length="20000" notNull="false" desc="视频文件OGG:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_WEBM" type="string" length="20000" notNull="false" desc="视频文件WEBM:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_PLACEHOLDER" type="string" length="20000" notNull="false" desc="视频封面文件源:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="CONTROLS" type="boolean" length="" notNull="false" desc="是否显示控制条"/>
+        <field column="PRELOAD" type="boolean" length="" notNull="false" desc="是否预加载"/>
+        <field column="AUTOPLAY" type="boolean" length="" notNull="false" desc="是否自动播放"/>
+        <field column="AUTOPLAY_OFF" type="boolean" length="" notNull="false" desc="是否自动停止"/>
+        <field column="DO_LOOP" type="boolean" length="" notNull="false" desc="是否循环播放"/>
+        <field column="DATE_GENERAL_FORMAT" type="string" length="16" notNull="false" desc="显示内容：dateTime、timeDate、data、time"/>
+        <field column="DATE_FORMAT" type="string" length="16" notNull="false" desc="日期显示格式：dayMonthYear、monthDayYear、yearMonthDay"/>
+        <field column="DAY_FORMAT" type="string" length="16" notNull="false" desc="日显示格式："/>
+        <field column="MONTH_FORMAT" type="string" length="16" notNull="false" desc="月显示格式："/>
+        <field column="YEAR_FORMAT" type="string" length="16" notNull="false" desc="年显示格式："/>
+        <field column="TIME_FORMAT" type="string" length="16" notNull="false" desc="时间显示格式："/>
+        <field column="DAY_NAME_FORMAT" type="string" length="16" notNull="false" desc="星期显示格式："/>
+        <field column="DATE_SEPARATOR" type="string" length="16" notNull="false" desc="显示分隔符"/>
+    </table>
+
+    <table name="PROTOTYPE_LIB" desc="组件表" key="PROTOTYPE_ID,SCREEN_ID,ID" type="InnoDB">
+        <field column="PROTOTYPE_ID" type="long" length="" notNull="true" desc="原型编号"/>
+        <field column="SCREEN_ID" type="long" length="" notNull="true" desc="页面编号"/>
+        <field column="ID" type="long" length="" notNull="true" desc="组件ID，编组唯一标识"/>
+        <field column="PID" type="long" length="" notNull="true" desc="组件索引"/>
+        <field column="TITLE" type="string" length="32" notNull="true" desc="组件名称，编组名称"/>
+        <field column="TYPE" type="string" length="16" notNull="true" desc="组件类型："/>
+        <field column="SEC_TYPE" type="string" length="16" notNull="false" desc="自定义类型，自定义源码的组件"/>
+        <field column="LIB_STATUS" type="byte" length="" notNull="true" desc="组件状态：1表示正常，2表示已删除，3表示已隐藏，4表示已锁定"/>
+        <field column="THUMB_URL" type="string" length="20000" notNull="true" desc="封面缩略图"/>
+        <field column="EDITABLE" type="byte" length="" notNull="true" desc="可编辑：0：正常，1：不可编辑，2：仅大小，3：仅位置，4：仅基础样式"/>
+        <field column="LIB_KEYS" type="string" length="5000" notNull="false" desc="关键词"/>
+        <field column="WIDTH" type="decimal" length="16,8" notNull="true" desc="元素宽度"/>
+        <field column="HEIGHT" type="decimal" length="16,8" notNull="true" desc="元素高度"/>
+        <field column="X" type="decimal" length="16,8" notNull="true" desc="水平偏移"/>
+        <field column="X_RIGHT" type="boolean" length="" notNull="true" desc="偏移标准：true：right，false：left，默认false"/>
+        <field column="Y" type="decimal" length="16,8" notNull="true" desc="垂直偏移"/>
+        <field column="Y_BOTTOM" type="boolean" length="" notNull="true" desc="偏移标准：true：bottom，false：top，默认false"/>
+        <field column="ROTATION" type="int" length="" notNull="true" desc="旋转角度"/>
+        <field column="OPACITY" type="decimal" length="8,4" notNull="true" desc="不透明度"/>
+        <field column="LOCKED" type="boolean" length="" notNull="true" desc="是否锁定"/>
+        <field column="VISIBLE" type="boolean" length="" notNull="true" desc="是否显示"/>
+        <field column="ACTION" type="string" length="10000" notNull="false" desc="事件列表，对象字符串"/>
+        <field column="ENABLE_SHADOW" type="boolean" length="" notNull="true" desc="开启阴影"/>
+        <field column="SHADOW_COLOR" type="string" length="16" notNull="false" desc="阴影颜色"/>
+        <field column="SHADOW_X" type="int" length="" notNull="false" desc="阴影x偏移"/>
+        <field column="SHADOW_Y" type="int" length="" notNull="false" desc="阴影y偏移"/>
+        <field column="SHADOW_BLUR" type="int" length="" notNull="false" desc="阴影模糊大小"/>
+    </table>
+
+    <table name="SYSTEM_ELEMENT" desc="系统元素表" key="ID,TITLE,Z_INDEX" type="InnoDB">
+        <field column="ID" type="long" length="" notNull="true" desc="元素编号"/>
+        <field column="TITLE" type="string" length="32" notNull="true" desc="元素名称"/>
+        <field column="Z_INDEX" type="long" length="" notNull="true" desc="元素层级"/>
+        <field column="TYPE" type="string" length="16" notNull="true" desc="元素类型：text、image、shape、rect、audio、video、html、frame、dateTime、"/>
+        <field column="SEC_TYPE" type="string" length="16" notNull="false" desc="元素次级类型，某些类型元素拥有"/>
+        <field column="ELE_STATUS" type="byte" length="" notNull="true" desc="元素状态：1表示正常，2表示停用"/>
+        <field column="THUMB_URL" type="string" length="20000" notNull="true" desc="封面缩略图"/>
+        <field column="EDITABLE" type="byte" length="" notNull="true" desc="可编辑：0：正常，1：不可编辑，2：仅大小，3：仅位置，4：基础样式，5：仅文字内容"/>
+        <field column="ELE_KEYS" type="string" length="5000" notNull="false" desc="关键词"/>
+        <field column="HTML_SOURCE" type="string" length="20000" notNull="false" desc="特殊类型的素材，只能用源码表示"/>
+        <field column="WIDTH" type="decimal" length="16,8" notNull="true" desc="元素宽度"/>
+        <field column="HEIGHT" type="decimal" length="16,8" notNull="true" desc="元素高度"/>
+        <field column="X" type="decimal" length="16,8" notNull="true" desc="水平偏移"/>
+        <field column="X_RIGHT" type="boolean" length="" notNull="true" desc="偏移标准：true：right，false：left，默认false"/>
+        <field column="Y" type="decimal" length="16,8" notNull="true" desc="垂直偏移"/>
+        <field column="Y_BOTTOM" type="boolean" length="" notNull="true" desc="偏移标准：true：bottom，false：top，默认false"/>
+        <field column="ROTATION" type="int" length="" notNull="true" desc="旋转角度"/>
+        <field column="OPACITY" type="decimal" length="8,4" notNull="true" desc="不透明度"/>
+        <field column="AUTO_SIZE" type="boolean" length="" notNull="true" desc="是否自动大小"/>
+        <field column="LOCKED" type="boolean" length="" notNull="true" desc="是否锁定"/>
+        <field column="VISIBLE" type="boolean" length="" notNull="true" desc="是否显示"/>
+        <field column="PROPAGATE_EVENTS" type="boolean" length="" notNull="true" desc="是否事件穿透"/>
+        <field column="LIB_ID" type="long" length="" notNull="false" desc="组件ID"/>
+        <field column="LIB_TITLE" type="string" length="32" notNull="false" desc="组件名称"/>
+        <field column="BACKGROUND_COLOR" type="string" length="16" notNull="false" desc="背景颜色"/>
+        <field column="BORDER_WIDTH" type="int" length="" notNull="false" desc="边框大小"/>
+        <field column="BORDER_STYLE" type="string" length="16" notNull="false" desc="边框类型"/>
+        <field column="BORDER_COLOR" type="string" length="16" notNull="false" desc="边框颜色"/>
+        <field column="RADIUS_TOP_LEFT" type="int" length="" notNull="false" desc="左上圆角"/>
+        <field column="RADIUS_TOP_RIGHT" type="int" length="" notNull="false" desc="右上圆角"/>
+        <field column="RADIUS_BOTTOM_LEFT" type="int" length="" notNull="false" desc="左下圆角"/>
+        <field column="RADIUS_BOTTOM_RIGHT" type="int" length="" notNull="false" desc="右下圆角"/>
+        <field column="ACTION" type="string" length="20000" notNull="false" desc="事件列表:数组列表{id:&quot;&quot;,type:&quot;&quot;,sort:&quot;&quot;,title:&quot;&quot;,callback:&quot;&quot;,delay:&quot;&quot;,animation:&quot;&quot;,animationEasing:&quot;&quot;,duration:&quot;&quot;}"/>
+        <field column="ENABLE_MASK" type="boolean" length="" notNull="true" desc="开启蒙版"/>
+        <field column="MASK" type="string" length="10000" notNull="false" desc="蒙版，对象字符串"/>
+        <field column="ENABLE_SHADOW" type="boolean" length="" notNull="true" desc="开启阴影"/>
+        <field column="SHADOW_COLOR" type="string" length="16" notNull="false" desc="阴影颜色"/>
+        <field column="SHADOW_X" type="int" length="" notNull="false" desc="阴影x偏移"/>
+        <field column="SHADOW_Y" type="int" length="" notNull="false" desc="阴影y偏移"/>
+        <field column="SHADOW_BLUR" type="int" length="" notNull="false" desc="阴影模糊大小"/>
+        <field column="ENABLE_FILTER" type="boolean" length="" notNull="true" desc="开启滤镜"/>
+        <field column="FILTER_BLUR" type="decimal" length="8,4" notNull="false" desc="模糊"/>
+        <field column="FILTER_SATURATION" type="decimal" length="8,4" notNull="false" desc="饱和"/>
+        <field column="FILTER_BRIGHTNESS" type="decimal" length="8,4" notNull="false" desc="亮度"/>
+        <field column="FILTER_CONTRAST" type="decimal" length="8,4" notNull="false" desc="对比"/>
+        <field column="FILTER_GRAYSCALE" type="decimal" length="8,4" notNull="false" desc="灰度"/>
+        <field column="FILTER_SEPIA" type="decimal" length="8,4" notNull="false" desc="加深"/>
+        <field column="FILTER_HUE" type="decimal" length="8,4" notNull="false" desc="色相"/>
+        <field column="FILTER_INVERT" type="decimal" length="8,4" notNull="false" desc="反相"/>
+        <field column="ENABLE_TRANSITION" type="boolean" length="" notNull="true" desc="开启动态特效"/>
+        <field column="TEXT" type="string" length="20000" notNull="false" desc="文字内容"/>
+        <field column="TEXT_HEIGHT_AUTO" type="boolean" length="" notNull="false" desc="文字高度自动"/>
+        <field column="TEXT_FONT" type="string" length="100" notNull="false" desc="文字字体"/>
+        <field column="TEXT_SIZE" type="int" length="" notNull="false" desc="字体大小"/>
+        <field column="TEXT_COLOR" type="string" length="16" notNull="false" desc="字体颜色"/>
+        <field column="LINE_HEIGHT" type="decimal" length="8,4" notNull="false" desc="行高"/>
+        <field column="LINE_HEIGHT_AUTO" type="boolean" length="" notNull="false" desc="行高自动"/>
+        <field column="LETTER_SPACE" type="decimal" length="8,4" notNull="false" desc="字距"/>
+        <field column="TEXT_ALIGN" type="string" length="16" notNull="false" desc="水平对齐："/>
+        <field column="VERTICAL_ALIGN" type="string" length="16" notNull="false" desc="垂直对齐："/>
+        <field column="TEXT_BOLD" type="boolean" length="" notNull="false" desc="文字加粗"/>
+        <field column="TEXT_ITALIC" type="boolean" length="" notNull="false" desc="文字斜体"/>
+        <field column="TEXT_UNDERLINE" type="boolean" length="" notNull="false" desc="文字下划线"/>
+        <field column="TEXT_SHADOW_X" type="int" length="" notNull="false" desc="文字投影偏移x"/>
+        <field column="TEXT_SHADOW_Y" type="int" length="" notNull="false" desc="文字投影偏移y"/>
+        <field column="TEXT_SHADOW_BLUR" type="int" length="" notNull="false" desc="文字投影模糊"/>
+        <field column="ICON_CLASS" type="string" length="32" notNull="false" desc="图标样式"/>
+        <field column="IMAGE_FILE" type="string" length="20000" notNull="false" desc="图片源:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="IMAGE_REPEAT" type="boolean" length="" notNull="false" desc="是否重复平铺"/>
+        <field column="ASPECT_RATIO" type="decimal" length="16,8" notNull="false" desc="源图片纵横比"/>
+        <field column="SHAPE_TYPE_NAME" type="string" length="16" notNull="false" desc="形状类型："/>
+        <field column="URL" type="string" length="200" notNull="false" desc="内嵌网页地址"/>
+        <field column="SCROLLABLE" type="boolean" length="" notNull="false" desc="内嵌网页可滚动"/>
+        <field column="HTML" type="string" length="20000" notNull="false" desc="自定义源码"/>
+        <field column="AUDIO_WAV" type="string" length="20000" notNull="false" desc="音频文件WAV:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="AUDIO_MP3" type="string" length="20000" notNull="false" desc="音频文件MP3:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="AUDIO_OGG" type="string" length="20000" notNull="false" desc="音频文件OGG:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="AUDIO_AAC" type="string" length="20000" notNull="false" desc="音频文件AAC:数组列表{url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_TYPE" type="string" length="16" notNull="false" desc="视频引用方式："/>
+        <field column="VIDEO_MP4" type="string" length="20000" notNull="false" desc="视频文件MP4:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_OGG" type="string" length="20000" notNull="false" desc="视频文件OGG:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_WEBM" type="string" length="20000" notNull="false" desc="视频文件WEBM:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="VIDEO_PLACEHOLDER" type="string" length="20000" notNull="false" desc="视频封面文件源:数组列表{id:&quot;&quot;,url:&quot;&quot;,type:&quot;&quot;,name:&quot;&quot;,fileId:&quot;&quot;}"/>
+        <field column="CONTROLS" type="boolean" length="" notNull="false" desc="是否显示控制条"/>
+        <field column="PRELOAD" type="boolean" length="" notNull="false" desc="是否预加载"/>
+        <field column="AUTOPLAY" type="boolean" length="" notNull="false" desc="是否自动播放"/>
+        <field column="AUTOPLAY_OFF" type="boolean" length="" notNull="false" desc="是否自动停止"/>
+        <field column="DO_LOOP" type="boolean" length="" notNull="false" desc="是否循环播放"/>
+        <field column="DATE_GENERAL_FORMAT" type="string" length="16" notNull="false" desc="显示内容：dateTime、timeDate、data、time"/>
+        <field column="DATE_FORMAT" type="string" length="16" notNull="false" desc="日期显示格式：dayMonthYear、monthDayYear、yearMonthDay"/>
+        <field column="DAY_FORMAT" type="string" length="16" notNull="false" desc="日显示格式："/>
+        <field column="MONTH_FORMAT" type="string" length="16" notNull="false" desc="月显示格式："/>
+        <field column="YEAR_FORMAT" type="string" length="16" notNull="false" desc="年显示格式："/>
+        <field column="TIME_FORMAT" type="string" length="16" notNull="false" desc="时间显示格式："/>
+        <field column="DAY_NAME_FORMAT" type="string" length="16" notNull="false" desc="星期显示格式："/>
+        <field column="DATE_SEPARATOR" type="string" length="16" notNull="false" desc="显示分隔符"/>
+    </table>
+
+    <table name="SYSTEM_LIB" desc="系统组件表" key="ID,PID" type="InnoDB">
+        <field column="ID" type="long" length="" notNull="true" desc="组件id，唯一标识"/>
+        <field column="PID" type="long" length="" notNull="true" desc="组件索引"/>
+        <field column="TITLE" type="string" length="32" notNull="true" desc="组件名称，描述性"/>
+        <field column="PROTOTYPE_TYPE" type="byte" length="" notNull="true" desc="原型类型：0：通用、1：后台管理、"/>
+        <field column="TYPE" type="string" length="16" notNull="true" desc="组件类型："/>
+        <field column="SEC_TYPE" type="string" length="16" notNull="false" desc="自定义类型，自定义源码的组件"/>
+        <field column="LIB_STATUS" type="byte" length="" notNull="true" desc="组件状态：1表示正常，2表示已删除，3表示已隐藏，4表示已锁定"/>
+        <field column="THUMB_URL" type="string" length="20000" notNull="true" desc="封面缩略图"/>
+        <field column="EDITABLE" type="byte" length="" notNull="true" desc="可编辑：0：正常，1：不可编辑，2：仅大小，3：仅位置，4：仅基础样式"/>
+        <field column="LIB_KEYS" type="string" length="5000" notNull="false" desc="关键词"/>
+        <field column="WIDTH" type="decimal" length="16,8" notNull="true" desc="元素宽度"/>
+        <field column="HEIGHT" type="decimal" length="16,8" notNull="true" desc="元素高度"/>
+        <field column="X" type="decimal" length="16,8" notNull="true" desc="水平偏移"/>
+        <field column="X_RIGHT" type="boolean" length="" notNull="true" desc="偏移标准：true：right，false：left，默认false"/>
+        <field column="Y" type="decimal" length="16,8" notNull="true" desc="垂直偏移"/>
+        <field column="Y_BOTTOM" type="boolean" length="" notNull="true" desc="偏移标准：true：bottom，false：top，默认false"/>
+        <field column="ROTATION" type="int" length="" notNull="true" desc="旋转角度"/>
+        <field column="OPACITY" type="decimal" length="8,4" notNull="true" desc="不透明度"/>
+        <field column="LOCKED" type="boolean" length="" notNull="true" desc="是否锁定"/>
+        <field column="VISIBLE" type="boolean" length="" notNull="true" desc="是否显示"/>
+        <field column="ACTION" type="string" length="10000" notNull="false" desc="事件列表，对象字符串"/>
+        <field column="ENABLE_SHADOW" type="boolean" length="" notNull="true" desc="开启阴影"/>
+        <field column="SHADOW_COLOR" type="string" length="16" notNull="false" desc="阴影颜色"/>
+        <field column="SHADOW_X" type="int" length="" notNull="false" desc="阴影x偏移"/>
+        <field column="SHADOW_Y" type="int" length="" notNull="false" desc="阴影y偏移"/>
+        <field column="SHADOW_BLUR" type="int" length="" notNull="false" desc="阴影模糊大小"/>
+    </table>
+
+    <table name="USER_LIB" desc="用户组件表" key="USER_ID,USER_TYPE,ID,PID" type="InnoDB">
+        <field column="USER_ID" type="long" length="" notNull="true" desc="用户id"/>
+        <field column="USER_TYPE" type="string" length="16" notNull="true" desc="用户自定义类型"/>
+        <field column="PROTOTYPE_TYPE" type="byte" length="" notNull="true" desc="原型类型：0：通用、1：后台管理、"/>
+        <field column="ID" type="long" length="" notNull="true" desc="组件id"/>
+        <field column="PID" type="long" length="" notNull="true" desc="组件索引"/>
+        <field column="TITLE" type="string" length="32" notNull="true" desc="组件名称"/>
+        <field column="TYPE" type="string" length="16" notNull="true" desc="组件类型："/>
+        <field column="SEC_TYPE" type="string" length="16" notNull="false" desc="自定义类型，自定义源码的组件"/>
+        <field column="LIB_STATUS" type="byte" length="" notNull="true" desc="组件状态：1表示正常，2表示已删除，3表示已隐藏，4表示已锁定"/>
+        <field column="THUMB_URL" type="string" length="20000" notNull="true" desc="封面缩略图"/>
+        <field column="EDITABLE" type="byte" length="" notNull="true" desc="可编辑：0：正常，1：不可编辑，2：仅大小，3：仅位置，4：仅基础样式"/>
+        <field column="LIB_KEYS" type="string" length="5000" notNull="false" desc="关键词"/>
+        <field column="WIDTH" type="decimal" length="16,8" notNull="true" desc="元素宽度"/>
+        <field column="HEIGHT" type="decimal" length="16,8" notNull="true" desc="元素高度"/>
+        <field column="X" type="decimal" length="16,8" notNull="true" desc="水平偏移"/>
+        <field column="X_RIGHT" type="boolean" length="" notNull="true" desc="偏移标准：true：right，false：left，默认false"/>
+        <field column="Y" type="decimal" length="16,8" notNull="true" desc="垂直偏移"/>
+        <field column="Y_BOTTOM" type="boolean" length="" notNull="true" desc="偏移标准：true：bottom，false：top，默认false"/>
+        <field column="ROTATION" type="int" length="" notNull="true" desc="旋转角度"/>
+        <field column="OPACITY" type="decimal" length="8,4" notNull="true" desc="不透明度"/>
+        <field column="LOCKED" type="boolean" length="" notNull="true" desc="是否锁定"/>
+        <field column="VISIBLE" type="boolean" length="" notNull="true" desc="是否显示"/>
+        <field column="ACTION" type="string" length="10000" notNull="false" desc="事件列表，对象字符串"/>
+        <field column="ENABLE_SHADOW" type="boolean" length="" notNull="true" desc="开启阴影"/>
+        <field column="SHADOW_COLOR" type="string" length="16" notNull="false" desc="阴影颜色"/>
+        <field column="SHADOW_X" type="int" length="" notNull="false" desc="阴影x偏移"/>
+        <field column="SHADOW_Y" type="int" length="" notNull="false" desc="阴影y偏移"/>
+        <field column="SHADOW_BLUR" type="int" length="" notNull="false" desc="阴影模糊大小"/>
+    </table>
+
+    <table name="ELEMENT_CLASSIFICATION" desc="元素分类表" key="ID,PID" type="InnoDB">
+        <field column="ID" type="long" length="" notNull="true" desc="分类id，从1开始"/>
+        <field column="PID" type="long" length="" notNull="true" desc="分类索引，连续排序"/>
+        <field column="PARENT" type="string" length="16" notNull="false" desc="所属分类code"/>
+        <field column="CLS_CODE" type="string" length="16" notNull="true" desc="分类标识"/>
+        <field column="CLS_NAME" type="string" length="16" notNull="true" desc="分类名"/>
+        <field column="CLS_STATUS" type="byte" length="" notNull="true" desc="分类状态，0：正常，1：停用"/>
+        <field column="CLS_ICON" type="string" length="20000" notNull="false" desc="分类图标，svg源码"/>
+        <field column="CLS_KEYS" type="string" length="500" notNull="false" desc="分类关键词"/>
+    </table>
+
+    <table name="LIB_CLASSIFICATION" desc="组件分类表" key="ID,PID" type="InnoDB">
+        <field column="ID" type="long" length="" notNull="true" desc="分类id，从1开始"/>
+        <field column="PID" type="long" length="" notNull="true" desc="分类索引，连续排序"/>
+        <field column="CLS_STYLE" type="byte" length="" notNull="true" desc="分类风格：1：后台"/>
+        <field column="CLS_CODE" type="string" length="16" notNull="true" desc="分类标识"/>
+        <field column="CLS_NAME" type="string" length="16" notNull="true" desc="分类名"/>
+        <field column="CLS_STATUS" type="byte" length="" notNull="true" desc="分类状态，0：正常，1：停用"/>
+        <field column="CLS_KEYS" type="string" length="500" notNull="false" desc="分类关键词"/>
+    </table>
+
+    <table name="USER_LIB_CLASSIFICATION" desc="用户组件分类表" key="USER_ID," type="InnoDB">
+        <field column="USER_ID" type="long" length="" notNull="true" desc="用户id"/>
+        <field column="ID" type="long" length="" notNull="true" desc="分类id，从1开始"/>
+        <field column="PID" type="long" length="" notNull="true" desc="分类索引，连续排序"/>
+        <field column="CLS_CODE" type="string" length="16" notNull="true" desc="分类标识，可以是字符、中文"/>
+    </table>
+
+</package>
+
+</zhiqim-dbo>

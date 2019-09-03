@@ -1,0 +1,35 @@
+<#var zmr_sidebar_width = 0/>
+<#var zmr_topnav_height = 0/>
+<!DOCTYPE html>
+<html>
+<head>
+<title>${context.getContextName()}</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+${Styles.src(zhiqim.css)}
+${Scripts.src(zhiqim.js)}
+${Styles.src(zmr_theme.css)}
+${Scripts.src(zmr_theme.js)}
+<#if request.getPathInContext() == "/"+zhiqim_manager+"/param.htm" || request.getPathInContext() == "/"+zhiqim_manager+"/themeMain.htm">
+<script>
+if (top.location == self.location)
+{//从其他主题切换过来的时候
+    top.location.href = "${context.getRootPath("/"+zhiqim_manager+"/main.htm")}";
+}
+</script>
+</#if>
+</head>
+
+<body>
+${Htmls.toCallFrame()}
+<div class="container">
+<div class="mainbody" style="margin-left:0;padding-top:0;">
+<!-- 主体开始 -->
+
+<#include include/>
+
+<!-- 主体结束 -->
+</div>
+</div>
+</body>
+</html>

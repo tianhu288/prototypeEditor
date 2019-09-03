@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/dbo"/>
+	<classpathentry kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/service"/>
+	<classpathentry kind="src" path="src/manage"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="lib/zhiqim.jar"/>
+	<classpathentry kind="lib" path="lib/zhiqim_httpd.jar"/>
+	<classpathentry kind="lib" path="lib/zhiqim_ui.jar"/>
+	<classpathentry kind="lib" path="lib/zhiqim_orm.jar"/>
+	<classpathentry kind="lib" path="lib/zhiqim_mysql5.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/zhiqim_manager.jar"/>
+	<classpathentry kind="lib" path="lib/zhiqim_upload_large.jar"/>
+	<classpathentry kind="lib" path="lib/zhiqim_zml.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

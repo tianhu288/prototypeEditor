@@ -1,0 +1,104 @@
+${zhiqim_manager_breadcrumb("元素分类列表")}
+${zhqim_manager_list_control_js()}
+${classification_list_input_cssJs("lib")}
+<script>
+    ListControl.checkBoxName = "clsCheckBox";
+    ListControl.deleteHtm = "libClassificationDelete.htm";
+    // 编辑分类
+    function editTheCls($this) {
+        let $tr = Z($this).parent().parent();
+        let $$Input = $tr.find('td');
+        let name = $$Input[1].innerHTML.trim();
+        let id = $$Input[2].innerHTML.trim();
+        let code = $$Input[3].innerHTML.trim();
+        let status = $$Input[4].getAttribute("data-value").trim();
+        let keys = $$Input[5].innerHTML.trim();
+        // 显示弹窗
+        editClsDialog("编辑分类", id, name, code, status, keys);
+    }
+</script>
+
+<div class="content">
+<#-- 导航栏 -->
+<div data-role="z-tabnav" class="z-tabnav-main z-mg-b20 z-blue">
+    <nav>
+        <ul>
+            <li class="zi-pd0"><a onclick="Z.E.stop(event);" class="z-show-b zi-pd-lr15 z-h100p" href="elementClassificationList.htm">元素分类列表</a></li>
+            <li class="z-active">组件分类列表</li>
+        </ul>
+        <div class="z-float-left z-mg10">
+            <form name="theForm" method="post">
+                <label class="z-float-left">
+                    <select class="z-select z-w80" data-role="z-select" data-class="${zmr_color_class}" name="releaseStatus" id="releaseStatus">
+                        <option value="0">类型</option>
+                    </select>
+                </label>
+                <label class="z-float-left z-mg-l-1">
+                    <select class="z-select z-w80" data-role="z-select" data-class="${zmr_color_class}" name="releaseStatus" id="releaseStatus">
+                        <option value="0">状态</option>
+                    </select>
+                </label>
+                <input class="z-float-left z-mg-l-1 z-input z-w150 ${zmr_color_class}" name="mediaName" value="${mediaName}" maxlength="10" placeholder="名称/关键词">
+                <button class="z-float-left z-button z-w80 zi-bd-rd0 z-blue"><i class="z-font z-query"></i>搜索</button>
+            </form>
+        </div>
+        <div class="z-text-right z-mg-t10 z-mg-r5">
+            <button class="z-button z-h30 ${zmr_color_class}" onclick="newClsDialog();"><i class="z-font z-add"></i>新建分类</button>
+            <button type="button" class="z-button z-red" onclick="ListControl.deleteItems();"><i class="z-font z-delete"></i>删除分类</button>
+        </div>
+    </nav>
+</div>
+
+
+<#-- 列表 -->
+<table class="z-table z-bordered z-bg-white z-pd6">
+    <tr class="z-text-center z-h40 z-bg-gray">
+        <td width="80"><input type="checkbox" name="" data-role="z-checkbox" data-class="z-blue" onchange='Z.FM.doSelectCheckBox("clsCheckBox", this.checked?1:2)'></td>
+        <td width="10%">名称</td>
+        <td width="10%">分类id</td>
+        <td width="10%">代码</td>
+        <td width="10%">状态</td>
+        <td width="*">关键词</td>
+        <td width="160">排序</td>
+        <td width="120">操作</td>
+    </tr>
+    
+    <#if pageResult.size() == 0>
+        ${zhiqim_manager_no_record (8, "暂时没有元素分类")}
+    </#if>
+    <#for item : pageResult.list()>
+    <tr valign="middle" bgcolor=<#if item_index % 2 == 0>${zmr_tr_odd_bgcolor}<#else>${zmr_tr_even_bgcolor}</#if> class="z-text-center z-h60">
+        <td><input value="${item.getId()}" type="checkbox" name="clsCheckBox" data-role="z-checkbox" data-class="z-blue"></td>
+        <td>${item.getClsName()}</td>
+        <td>${item.getId()}</td>
+        <td>${item.getClsCode()}</td>
+        <td data-value="${item.getClsStatus()}"><#if item.getClsStatus() == 1>正常<#elseif item.getClsStatus() == 2>停用</#if></td>
+        <td>${item.getClsKeys()}</td>
+        <td>
+            <i title="上移" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M896.93696 476.04736 512 91.1104 127.06304 476.04736 177.89952 526.88384 476.04736 228.74112 476.04736 932.8896 547.95264 932.8896 547.95264 228.74112 846.10048 526.88384Z" fill="#73777A"></path></svg>
+            </i>
+            <i title="下移" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M127.06304 547.95264L512 932.8896 896.93696 547.95264 846.10048 497.11616 547.95264 795.25887999 547.95264 91.11039999 476.04736 91.11039999 476.04736 795.25887999 177.89952 497.11616Z" fill="#73777A"></path></svg>
+            </i>
+            <i title="置顶" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M99.004 128.106h826.565v64H99.004zM480.1 299.396h64V926.4h-64z" fill="#73777A"></path><path d="M254.457 493.962l257.915-260.48 45.478 45.03-257.914 260.48z" fill="#73777A"></path><path d="M468.447 279.632l45.478-45.03 257.915 260.48-45.479 45.03z" fill="#73777A"></path></svg>
+            </i>
+            <i title="置底" class="clsPidCtrBtn" onclick="">
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M924.996 895.894l-826.565 0 0-64L924.996 831.894zM543.9 724.604l-64 0L479.9 97.6l64 1e-8z" fill="#73777A"></path><path d="M769.543 530.038l-257.915 260.48-45.478-45.03 257.914-260.48z" fill="#73777A"></path><path d="M555.553 744.368l-45.478 45.03-257.915-260.48 45.479-45.03z" fill="#73777A"></path></svg>
+            </i>
+        </td>
+        <td>
+            <button title="编辑分类" class="z-button z-xsmall z-font z-modify ${zmr_color_class}" onclick="editTheCls(this);"></button>&nbsp;&nbsp;
+            <button title="删除分类" class="z-button z-xsmall z-red z-font z-delete" onclick="ListControl.deleteItems(this);"></button>
+        </td>
+    </tr>
+    </#for>
+</table>
+
+
+
+
+<#-- 导航翻页 -->
+${zhiqim_manager_paging (pageResult, "libClassificationList.htm")}
+</div>

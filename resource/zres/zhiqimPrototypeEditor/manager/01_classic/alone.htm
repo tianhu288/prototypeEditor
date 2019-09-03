@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>${context.getContextName()}</title>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+${Styles.src(zhiqim.css)}
+${Scripts.src(zhiqim.js)}
+${Styles.src(zmr_theme.css)}
+${Scripts.src(zmr_theme.js)}
+<script>
+function doSelectorDialog()
+{//弹出组织选择框
+    var dialog = new Z.Dialog();
+    dialog.title = "选择组织";
+    dialog.url = "orgSelector.htm";
+    dialog.width = 392;
+    dialog.height = 423;
+    dialog.fixed = true;
+    dialog.scroll = true;
+    dialog.execute();
+}
+</script>
+</head>
+
+<body>
+${Htmls.toCallFrame()}
+<!--顶部导航 -->
+<div class="topnav">
+    <div id="logo" class="logo z-pointer z-text-left ${sessionUser.getSidebarClass()}" onclick="Z.L.href('${context.getRootPath("/"+zhiqim_manager+"/main.htm")}');">${context.getAttribute("name")}</div>
+    <div class="topnavleft">
+        <div class="bar z-w60 z-text-center z-pointer" onclick="Zmr.sidebar();"><i class="z-font z-list z-px22"></i></div>
+        ${zhiqim_manager_topnav_left_defined()}
+    </div>
+    <div class="topnavright">
+        ${zhiqim_manager_topnav_right_defined()}
+        <#if ZmrOrgDao.getOrgList(request, sessionUser.getOperatorCode()).size() gt 1>
+        <div class="nav z-text-center z-pointer z-pd-l20 z-pd-r20" style="max-width:200px;" onclick="doSelectorDialog();">${ZmrOrgDao.getOrgName(request, sessionUser.getSelectedOrgId())}</div>
+        </#if>
+        <div class="nav z-w80 z-text-center z-pointer" onclick="Z.L.href('${context.getRootPath("/"+zhiqim_manager+"/profile.htm")}');"><img class="z-bd-rd50p z-w40 z-h40" src="${sessionUser.getAvatar50()}"></div>
+        <div class="nav z-w100 z-text-center z-pointer" onclick="Z.L.reload();">刷新</div>
+        <div class="nav z-w100 z-text-center z-pointer" onclick="Z.L.confirm('${context.getRootPath("/"+zhiqim_manager+"/logout.htm")}', '确实要退出吗?');">退出系统</div>
+    </div>
+</div>
+
+<!--容器开始 -->
+<div id="container" class="container">
+
+<!--边导航 -->
+<div id="sidebar" class="sidebar ${sessionUser.getSidebarClass()}">
+<#var topMenuCode = sessionUser.getSelectedTopMenuCodeOrFirstMenuCode(request, designatedPath)/>
+<#var childMenuCode = sessionUser.getSelectedSecondMenuCode(request, designatedPath)/>
+<#for topMenu : sessionUser.getTopMenuList()>
+<#if sessionUser.hasChildMenu(topMenu.getMenuCode())>
+    <p><i class="z-font z-px16 z-mg-r5 ${topMenu.getMenuIcon()}"></i>#{topMenu.getMenuName()}<i class="z-arrow z-px5"><span></span></i></p>
+    <ul id="${topMenu.getMenuCode()}" style="display: <#if topMenu.getMenuCode() == topMenuCode>block<#else>none</#if>;">
+    <#for childMenu : sessionUser.getChildMenuList(topMenu.getMenuCode())>
+        <li onclick="Z.L.href('${context.getRootPath(childMenu.getMenuUrl())}');" <#if childMenu.getMenuCode() == childMenuCode>class="active"</#if>>#{childMenu.getMenuName()}</li>
+    </#for>
+    </ul>
+<#elseif Validates.isNotEmptyBlank(topMenu.getMenuUrl())>
+    <p onclick="Z.L.href('${context.getRootPath(topMenu.getMenuUrl())}');"><i class="z-font z-px16 z-mg-r5 ${topMenu.getMenuIcon()}"></i>#{topMenu.getMenuName()}</p>
+</#if>
+</#for>
+</div>
+
+<!--主体-->
+<div id="mainbody" class="mainbody" style="margin-left:<#if sessionUser.hasSidebar()>200px<#else>0</#if>">
+    <#include include/>
+</div>
+
+<!-- 容器结束  -->
+</div>
+
+<!--脚注-->
+<div class="footer">
+    <div class="footer-wrap">${zmr_copyright}</div>
+</div>
+</body>
+</html>

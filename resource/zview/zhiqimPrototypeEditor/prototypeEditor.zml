@@ -1,0 +1,1000 @@
+${Scripts.src(zhiqim_uploadlarge.js)}
+${zhqim_prototype_design_css_defined()}
+${zhqim_prototype_design_js_defined()}
+
+<script>
+    Const.zhiqimUICss = "${zhiqim.css}";
+    Prototype.model = ${Jsons.toString(prototype)};
+    Prototype.id = ${Jsons.toString(prototype.getCanvas().getPrototypeId())};
+    Prototype.eleClsList = ${Jsons.toString(eleClsList)};
+    Prototype.libClsList = ${Jsons.toString(libClsList)};
+    Prototype.sysEleTypeList = ${Jsons.toString(sysEleTypeList)};
+    Prototype.sysLibTypeList = ${Jsons.toString(sysLibTypeList)};
+    Prototype.sysIconTypeList = ${Jsons.toString(sysIconTypeList)};
+    Prototype.sysImageTypeList = ${Jsons.toString(sysImageTypeList)};
+    Prototype.userLibTypeList = ${Jsons.toString(userLibTypeList)};
+    // 大文件上传路径
+    UploadImage.contextPath = "${context.getContextPath()}";
+    UploadImage.path = "${prePath}";
+</script>
+
+<!--顶部导航 -->
+<div id="proEditor_topNav">
+    <div id="proEditor_logo" class="z-h50 z-text-center">
+        <div class="proEditor-logoImg"><img src="../zres/zhiqimPrototypeEditor/img/logo/logo80.png" alt="知启蒙原型设计"/></div>
+        <div class="proEditor-logoName z-h50 z-text-left">知启蒙原型设计</div>
+    </div>
+    <div id="proEditor_topPageNav">
+        <span class="proEditor-proName">${prototype.getCanvas().getPrototypeName()}</span>
+        <span>&gt;</span>
+        <span class="proEditor-pageName">页面名<i class="iconfont icon-revoke z-mg-l2"></i></span>
+    </div>
+    <div class="proEditor-toolBar">
+        <div class="proEditor-toolBar-list toolGroup-undo">
+            <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>撤销</div>
+            <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>重做</div>
+        </div>
+        <div class="proEditor-toolBar-list toolGroup-edit">
+            <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>剪切</div>
+            <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>复制</div>
+            <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>粘贴</div>
+            <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>删除</div>
+        </div>
+        <div class="proEditor-toolBar-list toolGroup-screen">
+            <div class="toolBtn small" onclick=""><div class="z-w30 z-px20 z-pointer">-</div></div>
+            <div class="toolBtn small zi-px14" onclick="">100%</div>
+            <div class="toolBtn small" onclick=""><div class="z-w30 z-px18 z-pointer">+</div></div>
+            <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>设置</div>
+            <div class="toolBtn z-mg-l10"><i class="iconfont icon-revoke"></i>所有</div>
+        </div>
+        <div class="proEditor-toolBar-list toolGroup-help">
+            <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>快捷键</div>
+        </div>
+        <div class="proEditor-toolBar-list toolGroup-save">
+            <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>下载</div>
+            <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>保存</div>
+            <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>预览</div>
+        </div>
+    </div>
+</div>
+
+<!--容器 -->
+<div id="containerDesign">
+    <!--边导航开始-->
+    <div id="container_left">
+        <!--顶导航-->
+        <ul class="leftNav sideNav">
+            <li>组件</li>
+            <li>页面</li>
+        </ul>
+        <!--素材列表-->
+        <div class="leftList sideList">
+            <div class="list-item widgetNavList active">
+                <!--列表内导航-->
+                <ul class="sideNav">
+                    <li>基础</li>
+                    <li >组件</li>
+                    <li>我的</li>
+                </ul>
+                <!--素材列表-->
+                <div class="sideList">
+                    <div class="list-item">
+                        <div class="searchRect">
+                            <label class="z-show-ib">
+                                <input class="z-input z-small z-blue" type="text" value="" placeholder="搜索基础元素">
+                            </label><span class="z-button z-blue searchBtn"><i class="z-font z-query"></i></span>
+                        </div>
+                        <div class="dropDownRect">
+                            <label>
+                                <select class="z-select z-w100p z-small" data-role="z-select" data-class="z-blue">
+                                    <option value="all">全部</option>
+                                    <option value="basic">基础元素</option>
+                                    <option value="icon">图标库</option>
+                                    <option value="image">图片库</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="widgetList">
+                            <div class="widgetList-title"><i class="z-font z-arrowhead-right"></i>基础元素</div>
+                            <div class="widgetList-container">
+                                <div class="widgetList-content">
+                                    <#for item : eleClsList>
+                                    <#if Validates.isEmpty(item.getParent())>
+                                    <div class="widgetList-item" data-id="${item.getId()}" data-code="${item.getClsCode()}">
+                                        <div class="item-icon">${item.getClsIcon()}</div>
+                                        <div class="item-name">${item.getClsName()}</div>
+                                    </div>
+                                    </#if>
+                                    </#for>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widgetList miniList">
+                            <div class="widgetList-title"><i class="z-font z-arrowhead-right"></i>图标库</div>
+                            <div class="widgetList-container">
+                                <div class="widgetList-content">
+                                    <#for item : sysIconTypeList>
+                                    <div class="widgetList-typeName">${item.getName()}</div>
+                                    <#for ele : item.getElementList()>
+                                    <div class="widgetList-item" data-id="${item.getId()}" data-code="${item.getClsCode()}">
+                                        <div class="item-icon">${ele.getIconClass()}</div>
+                                        <div class="item-name">${ele.getTitle()}</div>
+                                    </div>
+                                    </#for>
+                                    </#for>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widgetList">
+                            <div class="widgetList-title"><i class="z-font z-arrowhead-right"></i>图片库</div>
+                            <div class="widgetList-container">
+                                <div class="widgetList-content">
+                                    <#for item : sysImageTypeList>
+                                    <div class="widgetList-typeName">${item.getName()}</div>
+                                    <#for ele : item.getElementList>
+                                    <div class="widgetList-item" data-id="${item.getId()}" data-code="${item.getClsCode()}">
+                                        <div class="item-icon">${ele.getImageFileUrl()}</div>
+                                        <div class="item-name">${ele.getTitle()}</div>
+                                    </div>
+                                    </#for>
+                                    </#for>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="searchRect">
+                            <label class="z-show-ib">
+                                <input class="z-input z-small z-blue" type="text" value="" placeholder="搜索组件">
+                            </label><span class="z-button z-blue searchBtn"><i class="z-font z-query"></i></span>
+                        </div>
+                        <div class="dropDownRect">
+                            <label>
+                                <select id="asd" class="z-select z-w100p z-small" data-role="z-select" data-class=" z-blue">
+                                    <option value="all">全部</option>
+                                    <#for item : libClsList>
+                                    <option value="${item.getId()}">${item.getClsName()}</option>
+                                    </#for>
+                                </select>
+                            </label>
+                        </div>
+                        <#for item : sysLibTypeList>
+                        <div class="widgetList">
+                            <div class="widgetList-title"><i class="z-font z-arrowhead-right"></i>${item.getName()}</div>
+                            <div class="widgetList-container">
+                                <div class="widgetList-content">
+                                    <#for lib : item.getSysLibList()>
+                                    <#if  lib.getPrototypeType() == prototype.getCanvasModel().getPrototypeType()>
+                                    <div class="widgetList-item">
+                                        <div class="item-image">${lib.getThumbUrl()}</div>
+                                        <div class="item-name">${lib.getTitle()}</div>
+                                    </div>
+                                    </#if>
+                                    </#for>
+                                </div>
+                            </div>
+                        </div>
+                        </#for>
+                    </div>
+                    <div class="list-item">
+                        <div class="searchRect searchRect-user">
+                            <label class="z-show-ib">
+                                <input class="z-input z-small z-blue" type="text" value="" placeholder="搜索我的组件">
+                            </label><span class="z-button z-blue searchBtn"><i class="z-font z-query"></i></span>
+                            <span class="z-button addLibToUser" title="添加到我的组件"><i class="z-font z-add"></i></span>
+                        </div>
+                        <div class="dropDownRect">
+                            <label>
+                                <select class="z-select z-w100p z-small" data-role="z-select" data-class=" z-blue">
+                                    <option value="all">全部</option>
+                                </select>
+                            </label>
+                        </div>
+                        <#for item : userLibTypeList>
+                        <div class="widgetList">
+                            <div class="widgetList-title"><i class="z-font z-arrowhead-right"></i>${item.getName()}</div>
+                            <div class="widgetList-container">
+                                <div class="widgetList-content">
+                                    <#for lib : item.getUserLibList()>
+                                    <#if  lib.getPrototypeType() == prototype.getCanvasModel().getPrototypeType()>
+                                    <div class="widgetList-item">
+                                        <div class="item-image">${lib.getThumbUrl()}</div>
+                                        <div class="item-name">${lib.getTitle()}</div>
+                                    </div>
+                                    </#if>
+                                    </#for>
+                                </div>
+                            </div>
+                        </div>
+                        </#for>
+                    </div>
+                </div>
+            </div>
+            <div class="list-item pageNavList">
+                <!--列表内导航-->
+                <ul class="sideNav">
+                    <li>页面</li>
+                    <li>元素</li>
+                </ul>
+                <!--页面元素列表-->
+                <div class="sideList">
+                    <div class="list-item pageListItem">
+                        <div class="searchRect">
+                            <label class="z-show-ib">
+                                <input class="z-input z-small z-blue" type="text" value="" placeholder="搜索页面">
+                            </label><span class="z-button z-blue searchBtn"><i class="z-font z-query"></i></span>
+                            <span class="z-button thumbnailBtn" title="缩略图展示"><i class="z-font z-apps"></i></span>
+                            <span class="z-button z-blue listBtn" title="列表展示"><i class="z-font z-list"></i></span>
+                        </div>
+                        <div class="pageList">
+                            <div class="pageNavList-item">
+                                <div class="item-icon"><i class="z-font z-text"></i></div>
+                                <div class="item-name">文件名</div>
+                                <div class="item-btn item-copy"><i class="z-font z-copy"></i></div>
+                                <div class="item-btn item-delete"><i class="z-font z-delete"></i></div>
+                                <div class="item-btn item-bind"><i class="z-font z-text"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-item elementListItem">
+                        <div class="searchRect">
+                            <label class="z-show-ib">
+                                <input class="z-input z-small z-blue" type="text" value="" placeholder="搜索页面">
+                            </label><span class="z-button z-blue searchBtn"><i class="z-font z-query"></i></span>
+                        </div>
+                        <div class="elementList">
+                            <div class="pageNavList-item">
+                                <div class="item-icon"><i class="z-font z-play"></i></div>
+                                <div class="item-name">元素名</div>
+                                <div class="item-btn item-lock"><i class="z-font z-lock"></i></div>
+                                <div class="item-btn item-show"><i class="z-font z-display"></i></div>
+                                <div class="item-btn item-bind"><i class="z-font z-text"></i></div>
+                            </div>
+                            <div class="pageNavList-item">
+                                <div class="item-icon"><i class="z-font z-collect"></i></div>
+                                <div class="item-name">分组</div>
+                                <div class="item-btn item-lock"><i class="z-font z-lock"></i></div>
+                                <div class="item-btn item-show"><i class="z-font z-display"></i></div>
+                                <div class="item-btn item-bind"><i class="z-font z-text"></i></div>
+                            </div>
+                            <div class="pageNavList-item pageNavList-group">
+                                <div class="item-icon"><i class="z-font z-folder"></i></div>
+                                <div class="item-name">分组</div>
+                                <div class="item-btn item-lock"><i class="z-font z-lock"></i></div>
+                                <div class="item-btn item-show"><i class="z-font z-display"></i></div>
+                                <div class="item-btn item-bind"><i class="z-font z-text"></i></div>
+                            </div>
+                            <div class="pageNavList-groupList">
+                                <div class="pageNavList-item">
+                                    <div class="item-icon"><i class="z-font z-play"></i></div>
+                                    <div class="item-name">元素名</div>
+                                    <div class="item-btn item-lock"><i class="z-font z-lock"></i></div>
+                                    <div class="item-btn item-show"><i class="z-font z-display"></i></div>
+                                    <div class="item-btn item-bind"><i class="z-font z-text"></i></div>
+                                </div>
+                                <div class="pageNavList-item">
+                                    <div class="item-icon"><i class="z-font z-play"></i></div>
+                                    <div class="item-name">元素名</div>
+                                    <div class="item-btn item-lock"><i class="z-font z-lock"></i></div>
+                                    <div class="item-btn item-show"><i class="z-font z-display"></i></div>
+                                    <div class="item-btn item-bind"><i class="z-font z-text"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--边导航结束-->
+    </div>
+    <!--右边面板-->
+    <div id="container_right">
+        <!--顶导航-->
+        <ul class="rightNav sideNav">
+            <li>设置</li>
+            <li>事件</li>
+            <li>状态</li>
+        </ul>
+        <!--操作列表-->
+        <div class="rightList sideList">
+            <div id="widgetSetting" class="list-item">
+                <div class="setting-section setting-screen">
+                    <div class="section-container">
+                        <div class="setting-flex flex-between">
+                            <div class="screen-name">
+                                <div class="name-text">页面标题</div>
+                                <label class="name-input">
+                                    <input type="text" value="页面标题">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-canvas">
+                    <div class="section-container">
+                        <div class="setting-flex flex-between">
+                            <div class="canvas-input canvas-width">
+                                <div class="input-name">宽</div>
+                                <div class="input-value">
+                                    <label><input type="text" value=""></label>
+                                    <div class="input-btnList">
+                                        <div class="input-btn btn-unit">Px</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="canvas-input canvas-height">
+                                <div class="input-name">高</div>
+                                <div class="input-value">
+                                    <label><input type="text" value=""></label>
+                                    <div class="input-btnList">
+                                        <div class="input-btn btn-unit">Px</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex setting-canvas-textStyle">
+                            <div class="setting-canvas-name">背景</div>
+                            <div class="setting-canvas-container">
+                                <div class="setting-colorBox" data-type="text-color"></div>
+                                <div class="setting-slider">
+                                    <div class="slider-block">
+                                        <div class="slider-block-progress"></div>
+                                        <div class="slider-block-btn"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex">
+                            <label>
+                                <input type="checkbox">
+                                <span class="z-mg-l5 z-color-gray">隐藏标尺、辅助线</span>
+                            </label>
+                        </div>
+                        <div class="setting-flex">
+                            <label>
+                                <input type="checkbox">
+                                <span class="z-mg-l5 z-color-gray">显示网格</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-layout">
+                    <div class="section-title">
+                        <div class="title-name">布局</div>
+                        <div class="title-switch"><i class="z-font z-off"></i><i class="z-font z-on"></i></div>
+                    </div>
+                    <div class="section-container">
+                        <div class="setting-flex flex-between setting-layout-x">
+                            <span class="z-w40">图标</span>
+                            <label>
+                                <input class="z-w50" type="text" value="0">
+                            </label>
+                            <label>
+                                <input class="z-w50" type="text" value="0">
+                            </label>
+                            <label>
+                                <input class="z-w50" type="text" value="0">
+                            </label>
+                        </div>
+                        <div class="setting-flex flex-between setting-layout-y">
+                            <span class="z-w40">图标</span>
+                            <label>
+                                <input class="z-w50" type="text" value="0">
+                            </label>
+                            <label>
+                                <input class="z-w50" type="text" value="0">
+                            </label>
+                            <label>
+                                <input class="z-w50" type="text" value="0">
+                            </label>
+                        </div>
+                        <div class="setting-flex flex-between z-text-center zi-px12 z-color-999 zi-pd-tb0">
+                            <span class="z-w40"></span>
+                            <span class="z-w50">数量</span>
+                            <span class="z-w50">间隔</span>
+                            <span class="z-w50">尺寸</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-caption">
+                    <div class="section-container">
+                        <div class="setting-flex flex-between">
+                            <div class="caption-name">
+                                <div class="name-text">素材名</div>
+                                <label class="name-input">
+                                    <input type="text" value="素材名">
+                                </label>
+                            </div>
+                            <div class="caption-action">
+                                <div class="action-btn action-lock"><i class="z-font z-lock"></i></div>
+                                <div class="action-btn action-show"><i class="z-font z-display"></i></div>
+                                <div class="action-btn action-add"><i class="z-font z-add"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-general">
+                    <div class="section-container">
+                        <div class="setting-flex flex-between">
+                            <div class="general-input general-x">
+                                <div class="input-name">X</div>
+                                <div class="input-value">
+                                    <label><input type="text" value=""></label>
+                                    <div class="input-btnList">
+                                        <div class="input-btn btn-unit">Px</div>
+                                        <div class="input-btn btn-pos">L</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="general-input general-y">
+                                <div class="input-name">Y</div>
+                                <div class="input-value">
+                                    <label><input type="text" value=""></label>
+                                    <div class="input-btnList">
+                                        <div class="input-btn btn-unit">Px</div>
+                                        <div class="input-btn btn-pos">T</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex flex-between">
+                            <div class="general-input general-width">
+                                <div class="input-name">宽</div>
+                                <div class="input-value">
+                                    <label><input type="text" value=""></label>
+                                    <div class="input-btnList">
+                                        <div class="input-btn btn-unit">Px</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="general-input general-height">
+                                <div class="input-name">高</div>
+                                <div class="input-value">
+                                    <label><input type="text" value=""></label>
+                                    <div class="input-btnList">
+                                        <div class="input-btn btn-unit">Px</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex">
+                            <div class="general-input general-rotate">
+                                <div class="input-name"><i class="z-font z-refresh"></i></div>
+                                <div class="input-value">
+                                    <label><input type="text" value=""></label>
+                                    <div class="input-btnList">
+                                        <div class="input-unit">℃</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex flex-between setting-slider general-opacity">
+                            <div class="slider-name">不透明度</div>
+                            <div class="slider-block">
+                                <div class="slider-block-progress"></div>
+                                <div class="slider-block-btn"></div>
+                            </div>
+                            <label class="slider-input">
+                                <input type="text" value="">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-text">
+                    <div class="section-title">
+                        <div class="title-name">文字</div>
+                    </div>
+                    <div class="section-container">
+                        <div class="setting-flex">
+                            <div class="setting-text-name">字体</div>
+                            <div class="setting-text-container">
+                                <div class="setting-select text-select-fontFamily">
+                                    <div class="select-selected">
+                                        <div class="selected-text">思源黑体</div>
+                                        <i class="z-font z-arrowhead-down"></i>
+                                    </div>
+                                    <div class="select-list">
+                                        <div class="select-option" data-value="思源黑体">思源黑体</div>
+                                    </div>
+                                </div>
+                                <div class="setting-select text-select-fontSize">
+                                    <div class="select-selected">
+                                        <label>
+                                            <input type="text" class="selected-text" contenteditable="true" value="12">
+                                        </label>
+                                        <i class="z-font z-arrowhead-down"></i>
+                                    </div>
+                                    <div class="select-list">
+                                        <div class="select-option" data-value="12">12</div>
+                                        <div class="select-option" data-value="13">13</div>
+                                        <div class="select-option" data-value="14">14</div>
+                                        <div class="select-option" data-value="16">16</div>
+                                        <div class="select-option" data-value="18">18</div>
+                                        <div class="select-option" data-value="20">20</div>
+                                        <div class="select-option" data-value="28">28</div>
+                                        <div class="select-option" data-value="36">36</div>
+                                        <div class="select-option" data-value="48">48</div>
+                                        <div class="select-option" data-value="72">72</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex setting-text-textStyle">
+                            <div class="setting-text-name">样式</div>
+                            <div class="setting-text-container">
+                                <div class="setting-colorBox" data-type="text-color"></div>
+                                <div class="setting-group-btnList setting-text-style">
+                                    <div class="setting-group-btn">
+                                        加粗
+                                    </div>
+                                    <div class="setting-group-btn">
+                                        斜体
+                                    </div>
+                                    <div class="setting-group-btn">
+                                        下划
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex setting-text-textStyle">
+                            <div class="setting-text-name"></div>
+                            <div class="setting-text-container setting-text-space">
+                                <div class="setting-text-lineSpace">
+                                    <span>行距</span><label><input type="text" value=""></label>
+                                    <div class="setting-text-spaceResize"><i class="z-font z-refresh" title="默认大小"></i></div>
+                                </div>
+                                <div class="setting-text-letterSpace">
+                                    <span>字距</span><label><input type="text" value=""></label>
+                                    <div class="setting-text-spaceResize"><i class="z-font z-refresh" title="默认大小"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex">
+                            <div class="setting-text-name">对齐</div>
+                            <div class="setting-text-container">
+                                <div class="setting-group-btnList">
+                                    <div class="setting-group-btn">
+                                        上
+                                    </div>
+                                    <div class="setting-group-btn">
+                                        中
+                                    </div>
+                                    <div class="setting-group-btn">
+                                        下
+                                    </div>
+                                </div>
+                                <div class="setting-group-btnList">
+                                    <div class="setting-group-btn">
+                                        左
+                                    </div>
+                                    <div class="setting-group-btn">
+                                        中
+                                    </div>
+                                    <div class="setting-group-btn">
+                                        右
+                                    </div>
+                                    <div class="setting-group-btn">
+                                        两
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex setting-text-textShadow">
+                            <div class="setting-text-name">投影</div>
+                            <div class="setting-text-container">
+                                <div class="setting-colorBox" data-type="text-shadow"></div>
+                                <div>X<label><input type="text" value=""></label></div>
+                                <div>Y<label><input type="text" value=""></label></div>
+                            </div>
+                        </div>
+                        <div class="setting-flex setting-text-textShadow">
+                            <div class="setting-text-name"></div>
+                            <div class="setting-text-container">
+                                <div>模糊<label><input type="text" value=""></label></div>
+                                <div>扩散<label><input type="text" value=""></label></div>
+                            </div>
+                        </div>
+                        <div class="setting-flex">
+                            <label>
+                                <input type="checkbox">
+                                <span class="z-mg-l5 z-color-gray">文字高度自定义</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-image">
+                    <div class="section-title">
+                        <div class="title-name">图片</div>
+                    </div>
+                    <div class="section-container">
+                        <div class="setting-flex">
+                            <div class="setting-image-source">
+                                <div class="setting-image-thumbnail">
+                                    <img src="data:image/jpeg;base64,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" title="" alt="">
+                                </div>
+                                <div class="setting-image-name">
+                                    123维迪奇sdfas
+                                </div>
+                            </div>
+                            <div class="image-originSize">重置大小</div>
+                        </div>
+                        <div class="setting-flex">
+                            <label>
+                                <input type="checkbox">
+                                <span class="z-mg-l5 z-color-gray">等比缩放图片</span>
+                            </label>
+                        </div>
+                        <div class="setting-flex">
+                            <label>
+                                <input type="checkbox">
+                                <span class="z-mg-l5 z-color-gray">以原始尺寸重复平铺图片</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-icon">
+                    <div class="section-title">
+                        <div class="title-name">图标</div>
+                    </div>
+                    <div class="section-container">
+                        <div class="setting-flex">
+                            <div class="setting-colorBox" data-type="icon-color"></div>
+                            <div class="setting-image-source icon-source">
+                                <div class="setting-image-thumbnail">
+                                    <img src="data:image/jpeg;base64,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" title="" alt="">
+                                </div>
+                                <div class="setting-image-name">
+                                    123维迪奇sdfas
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-shape">
+                    <div class="section-title">
+                        <div class="title-name">形状</div>
+                    </div>
+                    <div class="section-container">
+                        <div class="setting-flex">
+                            <div class="setting-shape-type">星形</div>
+                            <div class="setting-shape-type">三角形</div>
+                            <div class="setting-shape-type">梯形</div>
+                            <div class="setting-shape-type">圆形</div>
+                        </div>
+                        <div class="setting-flex">
+                            <div class="setting-shape-type">矩形</div>
+                            <div class="setting-shape-type">下三角</div>
+                            <div class="setting-shape-type">菱形</div>
+                            <div class="setting-shape-type">平行</div>
+                        </div>
+                        <div class="setting-flex">
+                            <div class="setting-shape-type">六边</div>
+                            <div class="setting-shape-type">左三角</div>
+                            <div class="setting-shape-type">右三角</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-style">
+                    <div class="section-title">
+                        <div class="title-name">外观</div>
+                    </div>
+                    <div class="section-container">
+                        <div class="setting-flex style-bgColor">
+                            <div class="setting-style-name">背景</div>
+                            <div class="setting-style-container">
+                                <div class="setting-colorBox" data-type="style-bg"></div>
+                            </div>
+                        </div>
+                        <div class="setting-flex style-border">
+                            <div class="setting-style-name">边框</div>
+                            <div class="setting-style-container">
+                                <div class="setting-colorBox" data-type="style-bd"></div>
+                                <div class="setting-select border-style">
+                                    <div class="select-selected">
+                                        <div class="selected-text"><div style="width:70%;height:0;border-bottom:3px solid #666666;"></div></div>
+                                        <i class="z-font z-arrowhead-down"></i>
+                                    </div>
+                                    <div class="select-list">
+                                        <div class="select-option" data-value="solid">
+                                            <div style="width:70%;height:0;border-bottom:3px solid #666666;"></div>
+                                        </div>
+                                        <div class="select-option" data-value="dotted">
+                                            <div style="width:70%;height:0;border-bottom:3px dotted #666666;"></div>
+                                        </div>
+                                        <div class="select-option" data-value="dashed">
+                                            <div style="width:70%;height:0;border-bottom:3px dashed #666666;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="setting-select border-width">
+                                    <div class="select-selected">
+                                        <div class="selected-text">1</div>
+                                        <i class="z-font z-arrowhead-down"></i>
+                                    </div>
+                                    <div class="select-list">
+                                        <div class="select-option" data-value="1">1</div>
+                                        <div class="select-option" data-value="2">2</div>
+                                        <div class="select-option" data-value="3">3</div>
+                                        <div class="select-option" data-value="4">4</div>
+                                        <div class="select-option" data-value="5">5</div>
+                                        <div class="select-option" data-value="6">6</div>
+                                        <div class="select-option" data-value="7">7</div>
+                                        <div class="select-option" data-value="8">8</div>
+                                        <div class="select-option" data-value="9">9</div>
+                                        <div class="select-option" data-value="10">10</div>
+                                        <div class="select-option" data-value="11">11</div>
+                                        <div class="select-option" data-value="12">12</div>
+                                        <div class="select-option" data-value="13">13</div>
+                                        <div class="select-option" data-value="14">14</div>
+                                        <div class="select-option" data-value="15">15</div>
+                                        <div class="select-option" data-value="16">16</div>
+                                        <div class="select-option" data-value="17">17</div>
+                                        <div class="select-option" data-value="18">18</div>
+                                        <div class="select-option" data-value="19">19</div>
+                                        <div class="select-option" data-value="20">20</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="setting-flex style-radius">
+                            <div class="setting-style-name">圆角</div>
+                            <div class="setting-style-container">
+                                <label class="radius-width">
+                                    <input type="text" value="">
+                                </label>
+                                <div class="radius-pos setting-group-btnList">
+                                    <div class="radius-pos-all setting-group-btn">四</div>
+                                    <div class="radius-pos-scatter setting-group-btn">散<i class="z-font z-px12 z-arrowhead-down"></i></div>
+                                </div>
+                                <div class="radius-direct setting-group-btnList">
+                                    <div class="radius-direct-rect setting-group-btn">矩</div>
+                                    <div class="radius-direct-circle setting-group-btn">圆</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-advance">
+                    <div class="section-title">
+                        <div class="title-name">高级</div>
+                    </div>
+                    <div class="section-container">
+                        <div class="setting-flex advance-event">
+                            <label><input type="checkbox"></label>
+                            <div class="z-mg-l5 z-color-gray">事件穿透，将事件传播到下面的项目</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-section setting-mask">
+                    <div class="section-title">
+                        <div class="title-name">蒙版</div>
+                        <div class="title-switch"><i class="z-font z-off"></i><i class="z-font z-on"></i></div>
+                    </div>
+                    <div class="section-container">
+
+                    </div>
+                </div>
+                <div class="setting-section setting-shadow">
+                    <div class="section-title">
+                        <div class="title-name">阴影</div>
+                        <div class="title-switch"><i class="z-font z-off"></i><i class="z-font z-on"></i></div>
+                    </div>
+                    <div class="section-container">
+
+                    </div>
+                </div>
+                <div class="setting-section setting-filter">
+                    <div class="section-title">
+                        <div class="title-name">滤镜</div>
+                        <div class="title-switch"><i class="z-font z-off"></i><i class="z-font z-on"></i></div>
+                    </div>
+                    <div class="section-container">
+
+                    </div>
+                </div>
+                <div class="setting-section setting-special">
+                    <div class="section-title">
+                        <div class="title-name">特效</div>
+                        <div class="title-switch"><i class="z-font z-off"></i><i class="z-font z-on"></i></div>
+                    </div>
+                    <div class="section-container">
+
+                    </div>
+                </div>
+            </div>
+            <div class="list-item">
+                <div class="events-container events-container-list">
+                    <div class="events-new"><span class="z-mg-r10">+</span>添加新事件</div>
+                    <div class="events-itemList">
+                        <div class="events-item">
+                            <div class="events-item-name">
+                                <div class="item-name-text">事件自定义名称</div>
+                                <div class="item-name-btnList">
+                                    <div class="item-name-btn events-item-delete"><i class="z-font z-delete"></i></div>
+                                    <div class="item-name-btn events-item-disable">禁</div>
+                                    <div class="item-name-btn events-item-drag">拖</div>
+                                </div>
+                            </div>
+                            <div class="events-item-detail">
+                                <div class="events-item-trigger"><span>点击</span><span class="z-mg-l15">切换状态</span></div>
+                                <div class="events-item-action">状态1 -> 状态2</div>
+                            </div>
+                        </div>
+                        <div class="events-item">
+                            <div class="events-item-name">
+                                <div class="item-name-text">事件自定义名称</div>
+                                <div class="item-name-btnList">
+                                    <div class="item-name-btn events-item-delete"><i class="z-font z-delete"></i></div>
+                                    <div class="item-name-btn events-item-disable">禁</div>
+                                    <div class="item-name-btn events-item-drag">拖</div>
+                                </div>
+                            </div>
+                            <div class="events-item-detail">
+                                <div class="events-item-trigger"><span>点击</span><span class="z-mg-l15">切换状态</span></div>
+                                <div class="events-item-action">状态1 -> 状态2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="events-container events-container-edit">
+
+                </div>
+            </div>
+            <div class="list-item">
+                <!--列表内导航-->
+                <ul class="sideNav">
+                    <li>状态</li>
+                    <li>动画</li>
+                </ul>
+                <!--素材列表-->
+                <div class="rightList sideList">
+                    <div class="list-item">
+                        状态列表
+                    </div>
+                    <div class="list-item">
+                        动画列表
+                    </div>
+                    <div class="list-item">
+                        状态列表
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--边导航结束-->
+    </div>
+    <!--内容-->
+    <div id="container_canvas">
+        <!-- 画布顶部编辑区域 -->
+        <div id="canvas_toolBar" class="proEditor-toolBar">
+            <div class="proEditor-toolBar-list">
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>编组</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>打散</div>
+            </div>
+            <div class="proEditor-toolBar-list">
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>左对齐</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>居中</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>右对齐</div>
+            </div>
+            <div class="proEditor-toolBar-list">
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>上对齐</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>居中</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>下对齐</div>
+            </div>
+            <div class="proEditor-toolBar-list">
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>水平等间距</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>垂直等间距</div>
+            </div>
+            <div class="proEditor-toolBar-list">
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>上移</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>下移</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>置顶</div>
+                <div class="toolBtn" onclick=""><i class="iconfont icon-redo"></i>置底</div>
+            </div>
+            <div class="proEditor-toolBar-list">
+                <div class="toolBtn" onclick=""><i class="iconfont icon-revoke"></i>锁定</div>
+            </div>
+        </div>
+        <!-- 画布主要设计区域 -->
+        <div id="canvas_design" class="z-bg-gray-deep">
+            <div id="canvas_stage">
+                <div id="canvas_box">
+                    <div id="canvas_content">
+<!--                    <iframe id="canvas_iframe" name="canvasIframe"></iframe>-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 画布滚动工具 -->
+        <div id="canvas_scroll_ruler">
+            <div id="canvas_ruler">
+                <div class="canvas-ruler ruler-horizontal">
+                    <canvas></canvas>
+                    <div class="ruler-lineList"></div>
+                </div>
+                <div class="canvas-ruler ruler-vertical">
+                    <canvas></canvas>
+                    <div class="ruler-lineList"></div>
+                </div>
+            </div>
+            <div id="canvas_scroll">
+                <div class="scroll-bar scroll-horizontal"></div>
+                <div class="scroll-bar scroll-vertical"></div>
+            </div>
+        </div>
+        <!-- 画布辅助工具 -->
+        <div id="canvas_toolContainer"></div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 弹窗-画布尺寸/大小 -->
+<div id="canvas_size_box" class="miniPopup pagesizebox">
+    <div class="sizeSet-title z-mg-b5">当前尺寸</div>
+    <div class="sizeSet-content z-relative">
+        <div class="sizeeditor sizeSet-width">
+            <span class="sizeSet-name">宽度</span><span class="z-color-999">(像素)</span>
+            <input type="text" id="canvas_width" class="z-input z-small z-w90" value="" >
+    </div>
+    <div class="sizeeditor sizeSet-height">
+        <span class="sizeSet-name">高度</span><span class="z-color-999">(像素)</span>
+        <input type="text" id="canvas_height" class="z-input z-small z-w90" value="" >
+</div>
+<div class="scaleLockWrap active">
+    <div class="scaleLock-top"></div>
+    <div class="scaleLock-lock" onclick="EditBtnTool.switchSizeScaleLock(event);"></div>
+    <div class="scaleLock-bottom"></div>
+</div>
+</div>
+<div class="z-float-left z-mg-t10 z-px12 z-color-666">完整预览：<input type="checkbox" checked onchange="Const.switchCanvasFull(this.checked);"></div>
+<div class="z-mg-t10 z-show-ib z-w100p">
+    <button class="z-button z-float-right" onclick="MediaListen.changeCanvas(1)" disabledd>确定</button>
+</div>
+<!--
+<div class="line"></div>
+<div class="bottom"><button class="z-button z-blue z-large"><i class="iconfont icon-addpage"></i> <span>新建尺寸</span></button></div>
+-->
+</div>
+
+<!-- 弹窗-图片下载 -->
+<div id="mediaSave_box" class="miniPopup typeSelect-box">
+    <ul>
+        <li onclick="PrototypeHistory.doSaveDataOnly();">设计数据<div class="z-px13 z-lh20 z-color-gray">仅保存数据，速度较快</div></li>
+        <li onclick="PrototypeHistory.doSaveMedia();">数据+效果图<div class="z-px13 z-lh20 z-color-gray">速度较慢，需要等待</div></li>
+    </ul>
+</div>
+
+<!-- 弹窗-图片下载 -->
+<div id="imageDownload_box" class="miniPopup typeSelect-box">
+    <ul>
+        <li onclick="Const.doDownloadFile(0);">JPG<div class="z-px13 z-lh20 z-color-gray">文件较小</div></li>
+        <li onclick="Const.doDownloadFile(1);">PNG<div class="z-px13 z-lh20 z-color-gray">较清晰</div></li>
+        <li onclick="Const.doDownloadFile(2);">PDF<div class="z-px13 z-lh20 z-color-gray">打印/印刷</div></li>
+        <!--
+        <li onclick="Const.doDownloadFile(5);">PDF<span>（文字可编辑）</span></li>
+        <li onclick="Const.doDownloadFile(3);">SVG<span>（可编辑）</span></li>
+        <li onclick="Const.doDownloadFile(4);">SVG<span>（AI编辑）</span></li>
+        -->
+    </ul>
+</div>
